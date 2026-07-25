@@ -1,0 +1,8291 @@
+SIDON EXACT-RESEARCH REPOSITORY — COMPLETE TEXT CONTENTS
+This file concatenates every text/source artifact except itself.
+
+
+================================================================================
+FILE: CLAIMS.md
+================================================================================
+# Claim ledger
+
+The labels below are part of the mathematical audit.
+
+## PROVED IN THIS REPOSITORY
+
+### P1. Discrete vector covering lemma
+
+The exact finite lemma in `proofs/vector_covering_lemma.md` derives an upper
+bound from a finite list of rational covering inequalities. Its proof uses only
+nonnegative autocorrelation, the Sidon difference condition, and weighted
+Cauchy--Schwarz.
+
+### P2. Exact m=80 rational certificate
+
+The integer data in `certificates/m80/certificate.json` satisfy every covering
+constraint and prove
+
+\[
+ab<(942881/10^6)^2.
+\]
+
+The standard-library and SymPy verifiers are independent implementations.
+
+### P3. One-sided continuum kernel-majorant barrier
+
+For every finite vector-valued one-sided admissible system as defined in
+`proofs/continuum_barrier.md`,
+
+\[
+\frac A2+B\ge\frac43,
+\qquad AB\ge\frac89.
+\]
+
+Equality is attained by `p(u)=2u` on `[0,1]` and the delay profile. Therefore
+
+\[
+\inf\sqrt{AB}=2\sqrt2/3.
+\]
+
+The proof is analytic. Symbolic scripts verify its exact local identities and
+algebraic decompositions, not the measure-theoretic arguments.
+
+### P4. Exact cyclic-completion defect identities
+
+For a `k`-mark ruler of diameter `D<M=k^2-k+1`, reduction modulo `M` gives
+multiplicities in `{0,1,2}`; the number of holes equals the number of duplicate
+residue classes. For every `1<=r<M-D`, residue `r` cannot be duplicated.
+
+### P5. Translate-incidence moment identities for a planar difference set
+
+For a `(q^2+q+1,q+1,1)` cyclic difference set and an interval of length `H`,
+window counts satisfy exact first and second factorial-moment identities, while
+all higher factorial moments obey the unique-translate bound in
+`proofs/incidence_hierarchy.md`.
+
+### P6. Rank-aggregate plateau
+
+Rank-sum symmetry, concavity, aggregate band floors, and uncoupled completion
+identities admit central-gap pseudo-configurations at every fixed ruler deficit
+coefficient below `2`. They therefore do not improve the pairwise coefficient
+`4 sqrt(2)/3` in ruler normalization.
+
+## CONDITIONAL THEOREMS
+
+### C1. High-moment gateway for planar difference-set gaps
+
+If centered translate-window moments satisfy the Poisson-scale estimates stated
+in `proofs/incidence_hierarchy.md` up to orders tending to infinity, then the
+maximum cyclic gap is `q^{1+o(1)}`. This implication is proved; its hypothesis
+is not.
+
+### C2. Gateway to the upper half of Erdős Problem 30
+
+A `k^{1+o(1)}` stability theorem for the almost-perfect cyclic completion in
+P4 implies
+
+\[
+F(N)\le\sqrt N+N^{o(1)}.
+\]
+
+The stability theorem is not proved.
+
+## NOT CLAIMED
+
+- No proof of `F(N)=sqrt(N)+o(N^{1/4})`.
+- No proof of `F(N)=sqrt(N)+N^{o(1)}`.
+- No proof of the all-`N` lower error required for the full two-sided Erdős
+  Problem 30 assertion.
+- No numerical Level-2 moment optimum is reported as a theorem.
+- No continuum or finite bound is accepted solely from floating-point output.
+
+
+================================================================================
+FILE: FULL_PROOF_NOTE.md
+================================================================================
+# Sidon exact-research: full proof and audit note
+
+## Executive status
+
+This note contains the complete proofs and exact reductions established in the
+repository. It does **not** contain a proof of
+`F(N)=sqrt(N)+N^{o(1)}`. The unresolved implication is isolated explicitly in
+the incidence-hierarchy and cyclic-defect sections; no desired conclusion is
+inserted as a lemma.
+
+The proved components are:
+
+1. the finite vector-valued covering lemma;
+2. the exact `m=80` certificate interface;
+3. the one-sided continuum barrier `inf sqrt(AB)=2sqrt(2)/3`;
+4. the almost-perfect cyclic completion identities;
+5. the translate-incidence hierarchy and exact high-moment gateway;
+6. the uncoupled rank plateau and spectral-selector plateau.
+
+---
+
+---
+
+# Vector-valued covering lemmas
+
+This note gives the analytic bridge used by the finite certificate and the
+one-sided continuum problem. No optimization statement is used in either
+proof.
+
+## 1. Energy estimate requiring no kernel symmetry
+
+Let `A` be a Sidon subset of `{0,...,N-1}`, with `|A|=k`. Let `K` be a
+nonnegative probability sequence on the integers with finite support. Put
+
+\[
+u=1_A*K,
+\qquad
+C(d)=\sum_s K(s)K(s+d).
+\]
+
+The autocorrelation `C` is nonnegative and even, whether or not `K` is
+symmetric, and
+
+\[
+\sum_{d\in\mathbb Z}C(d)=1.
+\]
+
+If `Delta(A)` is the set of positive differences, then
+
+\[
+\begin{aligned}
+\|u\|_2^2
+ &=kC(0)+2\sum_{d\in\Delta(A)}C(d)\\
+ &\le kC(0)+2\sum_{d\ge1}C(d)\\
+ &=1+(k-1)C(0).
+\end{aligned}
+\tag{1}
+\]
+
+The only Sidon input is that each positive difference occurs at most once.
+
+For kernels `K_r` and weights `lambda_r>=0`, `sum lambda_r=1`, averaging (1)
+gives
+
+\[
+\sum_r\lambda_r\|1_A*K_r\|_2^2
+\le 1+(k-1)\sum_r\lambda_r C_r(0).
+\tag{2}
+\]
+
+## 2. Exact finite symmetric covering lemma
+
+Fix integers `m,L,R>=1`. For each `r`, let
+
+\[
+p^{(r)}=(p_0^{(r)},\ldots,p_{m-1}^{(r)})
+\]
+
+be a nonnegative symmetric probability vector. Let `lambda_r>=0` sum to one.
+Choose real numbers `w_j^{(r)}` for `0<=j<Lm` and extend them by
+`w_j^{(r)}=1` for `j>=Lm`. Assume
+
+\[
+\sum_{r=1}^R\lambda_r\sum_{i=0}^{m-1}
+ p_i^{(r)}w_{q+i}^{(r)}\ge1
+\qquad(0\le q\le Lm).
+\tag{3}
+\]
+
+Define
+
+\[
+a=m\sum_r\lambda_r\sum_i(p_i^{(r)})^2,
+\tag{4}
+\]
+
+and
+
+\[
+b=1+2\left(
+ \frac1m\sum_r\lambda_r\sum_{j=0}^{Lm-1}(w_j^{(r)})^2-L
+\right).
+\tag{5}
+\]
+
+### Lemma 2.1
+
+If `b>0`, then
+
+\[
+F(N)\le \sqrt N+\sqrt{ab}\,N^{1/4}+O(1).
+\tag{6}
+\]
+
+The implied constant depends on the fixed finite data, not on `N`.
+
+### Proof
+
+Choose a positive integer `h` and set `H=mh`. Define
+
+\[
+K_r(s)=\frac{p_i^{(r)}}h
+\quad\text{for }ih\le s<(i+1)h,
+\]
+
+and zero otherwise. Then
+
+\[
+C_r(0)=\frac{m}{H}\sum_i(p_i^{(r)})^2,
+\]
+
+so (2) becomes
+
+\[
+\mathcal E:=\sum_r\lambda_r\|1_A*K_r\|_2^2
+\le1+\frac{a(k-1)}H.
+\tag{7}
+\]
+
+For sufficiently large `N`, take `N>=2LH`. On
+
+\[
+J=\{0,1,\ldots,N+H-2\},
+\]
+
+put the block values `w_j^{(r)}` on the first `LH` sites, put the reflected
+block values on the last `LH` sites, and put `1` elsewhere. Call the resulting
+sequence `Q_r`.
+
+For any `x` with `0<=x<N`, the interval `[x,x+H-1]` meets at most one modified
+boundary. At the left boundary, writing `x=qh+t`, `0<=t<h`, the convolution
+
+\[
+\sum_r\lambda_r\sum_sK_r(s)Q_r(x+s)
+\]
+
+is a convex combination, with coefficients `1-t/h` and `t/h`, of covering
+constraints `q` and `q+1` in (3). It is therefore at least one. Symmetry of
+`p^{(r)}` reduces the right boundary to the same calculation. In the interior
+the convolution equals one. Thus
+
+\[
+\sum_r\lambda_r(K_r*Q_r)(x)\ge1
+\qquad(0\le x<N).
+\tag{8}
+\]
+
+Summing (8) over `x in A`, interchanging sums, and applying weighted
+Cauchy--Schwarz gives
+
+\[
+k^2\le
+\left(\sum_r\lambda_r\|Q_r\|_2^2\right)\mathcal E.
+\tag{9}
+\]
+
+The first factor is exact. Starting from the constant sequence one on `J`,
+the two modified boundaries contribute
+
+\[
+2h\sum_r\lambda_r\sum_{j=0}^{Lm-1}
+\big((w_j^{(r)})^2-1\big).
+\]
+
+Using (5),
+
+\[
+\sum_r\lambda_r\|Q_r\|_2^2=N+bH-1.
+\tag{10}
+\]
+
+Combining (7), (9), and (10),
+
+\[
+k^2\le(N+bH-1)\left(1+\frac{a(k-1)}H\right).
+\tag{11}
+\]
+
+The elementary difference count gives `k=O(sqrt N)`. Choose `H`, constrained
+to be a multiple of `m`, so that
+
+\[
+H=\sqrt{a/b}\,N^{3/4}+O(1).
+\]
+
+Expanding (11), first with `k=O(sqrt N)` and then substituting the resulting
+`k=sqrt N+O(N^{1/4})`, yields
+
+\[
+k^2\le N+2\sqrt{ab}\,N^{3/4}+O(N^{1/2}).
+\]
+
+Taking square roots proves (6). `QED`
+
+## 3. Exact causal one-sided covering lemma
+
+Kernel symmetry in Lemma 2.1 is used only to copy one boundary certificate to
+the other end. A causal kernel needs only one modified boundary.
+
+Let `K_r` be nonnegative probability sequences supported on
+`{0,...,H-1}`. Let `Q_r` be real sequences on `{0,...,N+H-2}`. Suppose
+
+\[
+\sum_r\lambda_r\sum_{s=0}^{H-1}K_r(s)Q_r(x+s)\ge1
+\qquad(0\le x<N).
+\tag{12}
+\]
+
+Then the same summation and Cauchy argument gives the exact inequality
+
+\[
+k^2\le
+\left(\sum_r\lambda_r\|Q_r\|_2^2\right)
+\left(1+(k-1)\sum_r\lambda_r\sum_sK_r(s)^2\right).
+\tag{13}
+\]
+
+No condition is placed on the right edge because a causal convolution from a
+mark `x` uses only sites `x,...,x+H-1`; the baseline support extension by `H`
+accounts for that edge.
+
+## 4. Continuum-to-discrete corollary
+
+Normalize continuum kernels to a common support `[0,H_0]`. Suppose
+`p_r>=0`, `int p_r=1`, and `w_r-1` is integrable and square-integrable, with
+
+\[
+\sum_r\lambda_r\int_0^{H_0}p_r(u)w_r(x+u)\,du\ge1
+\quad(x\ge0).
+\tag{14}
+\]
+
+Set
+
+\[
+A=\sum_r\lambda_r\int_0^{H_0}p_r(u)^2\,du,
+\quad
+B=H_0+\sum_r\lambda_r\int_0^\infty(w_r(t)^2-1)\,dt.
+\tag{15}
+\]
+
+Assume the profiles are piecewise `C^1` with finitely many jumps and decay
+exponentially to one. Midpoint discretization at physical scale `h` gives
+causal kernels and boundary weights satisfying
+
+\[
+\sum_r\lambda_r\sum_sK_{r,h}(s)^2
+ =\frac Ah+O(h^{-2}),
+\tag{16}
+\]
+
+and
+
+\[
+\sum_r\lambda_r\|Q_{r,h}\|_2^2
+ =N+Bh+o(h)+O(N/h).
+\tag{17}
+\]
+
+A common upward correction `O(1/h)` makes every discrete covering inequality
+exact. Its norm cost is `O(N/h)`. Taking `h asymp N^{3/4}` makes both errors
+`o(N^{3/4})`. Equation (13) therefore gives
+
+\[
+F(N)\le\sqrt N+\sqrt{AB}\,N^{1/4}+o(N^{1/4}).
+\tag{18}
+\]
+
+The proof of the continuum barrier establishes `AB>=8/9` for every such
+one-sided system and exhibits equality.
+
+---
+
+# The extremal delay profile
+
+All functions are real-valued on the nonnegative half-line. Define
+
+\[
+p_0(u)=2u\,1_{[0,1]}(u).
+\]
+
+Let
+
+\[
+w_0(t)=e^t-1\quad(0\le t<1)
+\]
+
+and for `t>=1` define the right-continuous continuation
+
+\[
+w_0(t)=\int_{t-1}^t w_0(s)\,ds.
+\tag{1}
+\]
+
+Put
+
+\[
+z_0=w_0-1,
+\qquad h_0=w_0+1=2+z_0.
+\]
+
+The value at `t=1` has a downward jump of one:
+`w_0(1-)=e-1`, `w_0(1+)=e-2`.
+
+## 1. Decay and integrability
+
+For `t>=1`,
+
+\[
+z_0(t)=\int_{t-1}^t z_0(s)\,ds.
+\tag{2}
+\]
+
+Its Laplace transform, initially for `Re(s)>0`, is
+
+\[
+Z(s)=\int_0^\infty e^{-st}z_0(t)\,dt
+ =\frac{(2-s)e^s-(2+s)}
+ {s((s-1)e^s+1)}.
+\tag{3}
+\]
+
+This follows by taking the Laplace transform of the distributional equation
+
+\[
+z_0'=z_0+2\,1_{(0,1)}-1_{(1,\infty)}z_0(\cdot-1)-\delta_1.
+\]
+
+The apparent singularity of (3) at zero is removable; expansion gives
+
+\[
+Z(s)=-\frac13+\frac{s}{18}+O(s^2).
+\tag{4}
+\]
+
+The characteristic equation away from zero is
+
+\[
+s=1-e^{-s}.
+\tag{5}
+\]
+
+Its only root in `Re(s)>=0` is zero. Indeed, if `s=x+iy`, the imaginary part
+of (5) gives `y=e^{-x}sin y`. If `x>0` and `y!=0`, then
+`|y|<|sin y|<=|y|`, impossible. Thus `y=0`, and
+`x=1-e^{-x}` has only `x=0`. At `x=0`, `y=sin y` again forces `y=0`.
+
+There is a spectral gap. For any fixed `delta>0`, a root with
+`Re(s)>=-delta` satisfies
+
+\[
+|s-1|=e^{-\Re s}\le e^\delta,
+\]
+
+so roots in that strip lie in a compact set. Since zero is isolated and
+removable in `Z`, some `eta>0` exists for which `Z` is holomorphic on
+`Re(s)>=-eta`. On vertical lines in that strip, (3) and its derivative have
+the decay required for one integration by parts in the Bromwich integral.
+Shifting the contour to `Re(s)=-eta` yields
+
+\[
+z_0(t)=O(e^{-\eta t}).
+\tag{6}
+\]
+
+Thus `z_0` belongs to both `L^1` and `L^2`, and every Fubini interchange below
+is absolutely justified.
+
+## 2. Active covering identity
+
+Define
+
+\[
+G(x)=\int_0^1 2u\,w_0(x+u)\,du.
+\]
+
+Direct integration gives `G(0)=1`. Integration by parts gives, at every point
+of differentiability,
+
+\[
+G'(x)=2w_0(x+1)-2\int_x^{x+1}w_0(t)\,dt=0
+\]
+
+by (1). Hence
+
+\[
+\boxed{\int_0^1 2u\,w_0(x+u)\,du=1\quad(x\ge0).}
+\tag{7}
+\]
+
+Equivalently, `T_{p_0}z_0=0`.
+
+## 3. The first two exact integrals
+
+Integrate `T_{p_0}z_0=0` over `x>=0`. Fubini gives
+
+\[
+0=\int_0^1t^2z_0(t)\,dt+\int_1^\infty z_0(t)\,dt.
+\]
+
+Therefore
+
+\[
+\int_0^\infty z_0(t)\,dt
+ =\int_0^1(1-t^2)(e^t-2)\,dt
+ =-\frac13.
+\tag{8}
+\]
+
+For the square integral, let
+
+\[
+\nu=\frac12\delta_0+\frac12z_0(t)\,dt.
+\]
+
+The adjoint of `T_{p_0}` satisfies
+
+\[
+T_{p_0}^*\nu(t)=
+\begin{cases}
+ z_0(t)+1-t^2,&0\le t<1,\\
+ z_0(t),&t\ge1.
+\end{cases}
+\tag{9}
+\]
+
+For `t<1`, (9) is the elementary identity
+
+\[
+t+\int_0^t(t-x)(e^x-2)\,dx=e^t-1-t^2.
+\]
+
+For `t>=1`, the density contribution is
+
+\[
+\int_{t-1}^t(t-x)z_0(x)\,dx.
+\]
+
+Equation (2) gives the unweighted integral `z_0(t)`, while (7), shifted by
+`t-1`, says the complementary weighted integral is zero. Hence the displayed
+integral equals `z_0(t)`.
+
+Pairing (9) with `z_0` and using `T_{p_0}z_0=0` gives
+
+\[
+0=\int_0^\infty z_0(t)^2\,dt
+  +\int_0^1(1-t^2)z_0(t)\,dt.
+\]
+
+Together with (8),
+
+\[
+\boxed{\int_0^\infty z_0(t)^2\,dt=\frac13.}
+\tag{10}
+\]
+
+Consequently
+
+\[
+\int_0^\infty(w_0(t)^2-1)\,dt
+ =2\int z_0+\int z_0^2=-\frac13.
+\tag{11}
+\]
+
+## 4. Positive dual measure and stationarity
+
+Let
+
+\[
+\mu_0=\delta_0+h_0(t)\,dt.
+\tag{12}
+\]
+
+It is positive. The exact adjoint equation is
+
+\[
+\boxed{T_{p_0}^*\mu_0=2w_0.}
+\tag{13}
+\]
+
+For `0<=t<1`,
+
+\[
+2t+\int_0^t2(t-x)e^x\,dx=2(e^t-1).
+\]
+
+For `t>=1`, the left side is
+
+\[
+\int_0^1 2v\,h_0(t-v)\,dv.
+\]
+
+The delay relation gives `int_0^1 h_0(t-v)dv=h_0(t)`. The shifted active
+identity (7) gives
+
+\[
+\int_0^1 2(1-v)h_0(t-v)\,dv=2.
+\]
+
+Subtracting yields `2h_0(t)-2=2w_0(t)`.
+
+## 5. Correlation and renewal slack
+
+Define the absolutely convergent regularized correlation
+
+\[
+C(r)=h_0(r)+\int_0^\infty
+ \big(h_0(x)h_0(x+r)-4\big)\,dx.
+\tag{14}
+\]
+
+Using `h_0=2+z_0` and (8)--(10), `C(0)=0`.
+
+For `0<r<1`, differentiate after expanding (14) in the integrable function
+`z_0`. The distributional delay equation gives
+
+\[
+C'(r)=C(r)-C(1-r)+4(1-r).
+\tag{15}
+\]
+
+For completeness, the extra term is not optional: writing
+`R(r)=int z_0(x)z_0(x+r)dx`, one obtains
+
+\[
+R'(r)=R(r)-R(1-r)+2\int_0^{1-r}z_0(x)dx-z_0(1-r),
+\]
+
+and substituting `z_0(t)=e^t-2` on `[0,1)` produces `4(1-r)` in (15).
+
+Let `F(r)=C(r)-2r`. Equation (15) becomes
+
+\[
+F'(r)=F(r)-F(1-r).
+\]
+
+Differentiating once more gives `F''=0`. Substitution back forces the slope to
+vanish, and `F(0)=0`; hence
+
+\[
+\boxed{C(r)=2r\quad(0\le r<1).}
+\tag{16}
+\]
+
+For `r>=1`, the delay equation applied to `h_0(x+r)` gives
+
+\[
+\boxed{C(r)=\int_0^1C(r-v)\,dv.}
+\tag{17}
+\]
+
+Set
+
+\[
+D(r)=2r-C(r),
+\]
+
+and extend `D` by zero on negative arguments. Then
+
+\[
+D(r)=0\quad(0\le r<1),
+\qquad
+D(r)=1+\int_0^1D(r-v)\,dv\quad(r\ge1).
+\tag{18}
+\]
+
+In particular,
+
+\[
+\boxed{D(r)\ge0\quad(r\ge0).}
+\tag{19}
+\]
+
+A weighted renewal identity will be needed. Put
+
+\[
+J(r)=\int_0^1(1-v)D(r-v)\,dv.
+\]
+
+For `r>1`, changing variables shows
+
+\[
+J'(r)=D(r)-\int_{r-1}^{r}D(t)\,dt=1
+\]
+
+by (18), and `J(1)=0`. Thus
+
+\[
+J(r)=r-1.
+\tag{20}
+\]
+
+Since `int_0^1D(r-v)dv=D(r)-1`, equation (20) implies
+
+\[
+D(r)-\int_0^1vD(r-v)\,dv=r.
+\tag{21}
+\]
+
+Equivalently,
+
+\[
+\boxed{C(r)+\frac12\int_0^1p_0(v)D(r-v)\,dv=r
+\quad(r\ge1).}
+\tag{22}
+\]
+
+Finally define
+
+\[
+\Psi(u)=w_0(u)+\int_0^\infty h_0(x)z_0(x+u)\,dx.
+\]
+
+Expanding (14) and using (8) gives
+
+\[
+\boxed{\Psi(u)=C(u)-\frac13.}
+\tag{23}
+\]
+
+On `[0,1]`, (16) says `Psi(u)=p_0(u)-1/3`. These are the Euler--Lagrange
+stationarity identities used by the barrier proof.
+
+---
+
+# The square-and-potential decomposition
+
+This note proves the global inequality at the heart of the continuum barrier.
+All functions and kernels are those defined in `delay_profile.md`.
+
+## 1. Admissible scalar system
+
+Let `H>0`. Let `p>=0` belong to `L^2([0,H])`, with `int p=1`, and extend it by
+zero. Let `w-1` belong to `L^1 cap L^2` and suppose
+
+\[
+T_pw(x):=\int_0^H p(u)w(x+u)\,du\ge1
+\quad\text{for almost every }x\ge0.
+\tag{1}
+\]
+
+Set
+
+\[
+A=\int p^2,
+\qquad
+B=H+\int_0^\infty(w^2-1).
+\]
+
+Write
+
+\[
+f=p-p_0,
+\qquad
+g=w-w_0.
+\]
+
+Then `int f=0`.
+
+## 2. The causal operator identity
+
+Define
+
+\[
+(Kf)(t)=f(t)+\int_0^t h_0(x)f(t-x)\,dx.
+\tag{2}
+\]
+
+Then
+
+\[
+\boxed{
+\|Kf\|_2^2
+ =\|f\|_2^2-
+ \iint f(u)f(v)D(|u-v|)\,du\,dv.}
+\tag{3}
+\]
+
+### Proof of (3)
+
+First truncate every outer `t`-integral at `T`, expand the square, and then
+let `T` tend to infinity. The cross term between `f` and `h_0*f` is
+
+\[
+\iint f(u)f(v)h_0(|u-v|)\,du\,dv.
+\]
+
+For the convolution-square term, suppose `v>=u`, put `r=v-u`, and write
+
+\[
+\int_v^T h_0(t-u)h_0(t-v)\,dt
+ =\int_0^{T-v}h_0(x+r)h_0(x)\,dx.
+\]
+
+Since `h_0=2+O(e^{-eta x})`, this equals
+
+\[
+4(T-v)+\int_0^\infty(h_0(x+r)h_0(x)-4)\,dx+o(1).
+\]
+
+After multiplication by `f(u)f(v)` and symmetric integration, the `4T` term
+vanishes because `int f=0`. The terms involving `u+v` also vanish. The only
+cutoff remainder is `-2|u-v|`. Hence the convolution-square term is
+
+\[
+\iint f(u)f(v)
+\left[
+\int_0^\infty(h_0(x)h_0(x+|u-v|)-4)\,dx
+-2|u-v|
+\right]du\,dv.
+\]
+
+Adding the cross term and using `C=h_0+int(h_0h_0-4)` gives
+
+\[
+\|Kf\|_2^2=\|f\|_2^2+
+\iint f(u)f(v)(C(|u-v|)-2|u-v|)du\,dv,
+\]
+
+which is (3), because `D(r)=2r-C(r)`. Absolute convergence follows from the
+compact support of `f` and exponential decay of `h_0-2`.
+
+## 3. Pairing the majorant with the positive dual measure
+
+Since `T_{p_0}w_0=1`, (1) is
+
+\[
+T_fw_0+T_pg\ge0.
+\]
+
+Pair this nonnegative function with
+
+\[
+\mu_0=\delta_0+h_0(x)dx.
+\]
+
+The pairing is finite after subtracting the limiting constants; this is
+legitimate because `int f=0`, `g in L^1`, and `h_0-2` decays exponentially.
+Using `T_{p_0}^*mu_0=2w_0`, one obtains
+
+\[
+0\le\int f(u)\Psi(u)\,du
+ +2\int g(t)w_0(t)\,dt
+ +\int g(t)(Kf)(t)\,dt.
+\tag{4}
+\]
+
+Here `Psi=C-1/3` is equation (23) of `delay_profile.md`.
+
+The objective difference from the extremizer is
+
+\[
+\begin{aligned}
+\frac A2+B-\frac43
+={}&H-1+\int p_0f+\frac12\|f\|_2^2\\
+&+2\int w_0g+\|g\|_2^2.
+\end{aligned}
+\tag{5}
+\]
+
+Use (4) to eliminate `2 int w_0g`, complete the square in `g`, and invoke
+(3). This yields
+
+\[
+\frac A2+B-\frac43
+\ge\left\|g-\frac12Kf\right\|_2^2+Q_H(p),
+\tag{6}
+\]
+
+where
+
+\[
+\begin{aligned}
+Q_H(p)={}&H-1-\int_{u>1}p(u)C(u)\,du
+ +\frac14\|p-p_0\|_2^2\\
+&+\frac14\iint
+ (p-p_0)(u)(p-p_0)(v)D(|u-v|)\,du\,dv.
+\end{aligned}
+\tag{7}
+\]
+
+The term involving `C` follows because `p_0-Psi` is constant `1/3` on
+`[0,1]`, and `int f=0` removes that constant.
+
+## 4. Exact reduction of `Q_H`
+
+Since `D=0` when both arguments lie in `[0,1]`, expand (7). The cross term with
+`p_0` is evaluated by the weighted renewal identity
+
+\[
+C(u)+\frac12\int_0^1p_0(v)D(u-v)\,dv=u
+\quad(u\ge1).
+\]
+
+After cancellation,
+
+\[
+\boxed{
+\begin{aligned}
+Q_H(p)={}&H-\frac23-\int_0^Hup(u)\,du
+ +\frac14\int_0^Hp(u)^2\,du\\
+&+\frac14\int_0^H\int_0^H
+ p(u)p(v)D(|u-v|)\,du\,dv.
+\end{aligned}}
+\tag{8}
+\]
+
+The last term is nonnegative because `p>=0` and `D>=0` pointwise.
+
+## 5. Pointwise endpoint certificate
+
+Put `x=H-u` and `q(x)=p(H-x)`. For all `x,q>=0`,
+
+\[
+xq+\frac{q^2}{4}\ge q-(1-x)_+^2.
+\tag{9}
+\]
+
+For `0<=x<=1`, the difference is exactly
+
+\[
+\left(\frac q2-(1-x)\right)^2.
+\]
+
+For `x>=1`, the difference is
+
+\[
+(x-1)q+\frac{q^2}{4}.
+\]
+
+Integrating (9), using `int q=1` and
+`int_0^1(1-x)^2dx=1/3`, gives
+
+\[
+H-\int up+\frac14\int p^2\ge\frac23.
+\tag{10}
+\]
+
+Equations (6), (8), and (10) prove
+
+\[
+\boxed{\frac A2+B\ge\frac43.}
+\tag{11}
+\]
+
+Every term discarded in this proof is displayed as a square or as an integral
+of a pointwise nonnegative kernel.
+
+## 6. Vector-valued systems
+
+Let `lambda_r>0`, `sum lambda_r=1`. Let each `p_r` be a probability density on
+the common interval `[0,H]`, and assume only the combined covering inequality
+
+\[
+\sum_r\lambda_rT_{p_r}w_r\ge1.
+\tag{12}
+\]
+
+Pair (12) once with `mu_0`, then repeat the preceding algebra componentwise and
+sum with weights `lambda_r`. The term `H-1` occurs once; every square,
+`D`-energy, first moment, and pointwise endpoint certificate averages linearly.
+Thus, with
+
+\[
+A=\sum_r\lambda_r\int p_r^2,
+\qquad
+B=H+\sum_r\lambda_r\int(w_r^2-1),
+\]
+
+one again obtains (11).
+
+---
+
+# Exact continuum barrier for one-sided kernel-majorant smoothing
+
+## Theorem
+
+Let `lambda_1,...,lambda_R>0` sum to one. For every `r`, let `p_r>=0` belong
+to `L^2([0,H])`, with `int p_r=1`, and let `w_r-1` belong to
+`L^1(0,infinity) cap L^2(0,infinity)`. Assume
+
+\[
+\sum_{r=1}^R\lambda_r\int_0^H p_r(u)w_r(x+u)\,du\ge1
+\quad\text{for almost every }x\ge0.
+\tag{1}
+\]
+
+Define
+
+\[
+A=\sum_r\lambda_r\int_0^Hp_r(u)^2\,du,
+\qquad
+B=H+\sum_r\lambda_r\int_0^\infty(w_r(t)^2-1)\,dt.
+\tag{2}
+\]
+
+Then
+
+\[
+\boxed{\frac A2+B\ge\frac43.}
+\tag{3}
+\]
+
+Consequently
+
+\[
+\boxed{AB\ge\frac89}
+\qquad\text{and}\qquad
+\boxed{\inf\sqrt{AB}=\frac{2\sqrt2}{3}.}
+\tag{4}
+\]
+
+The infimum is attained in the scalar system
+
+\[
+p_0(u)=2u\,1_{[0,1]}(u)
+\]
+
+with the delay profile `w_0` of `delay_profile.md`.
+
+## Proof
+
+The delay-profile note proves:
+
+1. `T_{p_0}w_0=1`;
+2. `int p_0^2=4/3`;
+3. `int(w_0^2-1)=-1/3`;
+4. the positive dual equation `T_{p_0}^*mu_0=2w_0`;
+5. a pointwise nonnegative renewal slack `D`;
+6. the weighted renewal identity required to cancel the cross term.
+
+The complete square-and-potential calculation in `decomposition19.md` proves
+(3), including the vector-valued case.
+
+It remains to pass from (3) to the product. Dilate any admissible system by
+`s>0`:
+
+\[
+p_{r,s}(u)=s^{-1}p_r(u/s),
+\qquad
+w_{r,s}(t)=w_r(t/s),
+\qquad
+H_s=sH.
+\]
+
+The covering inequality is preserved, while
+
+\[
+A_s=A/s,
+\qquad B_s=sB.
+\]
+
+Applying (3) for every `s>0`,
+
+\[
+\frac{A}{2s}+sB\ge\frac43.
+\]
+
+This also forces `B>0`. Minimizing the left side at
+`s=sqrt(A/(2B))` gives
+
+\[
+\sqrt{2AB}\ge\frac43,
+\]
+
+which is (4). For the displayed scalar system,
+
+\[
+A_0=\frac43,
+\qquad B_0=1-\frac13=\frac23,
+\]
+
+so `A_0B_0=8/9`. `QED`
+
+## Euler--Lagrange closure
+
+At the extremizer, every inequality in the proof is active:
+
+\[
+T_{p_0}w_0=1,
+\qquad
+T_{p_0}^*\mu_0=2w_0,
+\]
+
+\[
+\Psi(u)=p_0(u)-\frac13\quad(0<u<1),
+\]
+
+and scale stationarity is
+
+\[
+A_0=2B_0.
+\]
+
+The endpoint square is active because, after the substitution `x=1-u`,
+
+\[
+p_0(1-x)=2(1-x)
+\quad(0<x<1).
+\]
+
+Thus the theorem is a dual optimum certificate, not only a lower bound.
+
+## Relation to finite Sidon bounds
+
+The causal covering lemma in `vector_covering_lemma.md` discretizes any
+piecewise smooth admissible system. The theorem therefore proves that no
+one-sided pairwise-autocorrelation kernel-majorant system in this class can
+produce a coefficient below
+
+\[
+2\sqrt2/3
+\]
+
+in front of `N^{1/4}`. The theorem does not say that every possible Sidon-set
+argument has this barrier. It names the information discarded by this class:
+pairwise autocorrelation retains lag occupancy but not the common
+vertex-incidence/gradient realization of all lags.
+
+---
+
+# Almost-perfect cyclic completion of an interval ruler
+
+Let
+
+\[
+A=\{0=a_0<a_1<\cdots<a_{k-1}=D\}
+\]
+
+be a `k`-mark Golomb ruler. Put
+
+\[
+M=k^2-k+1.
+\]
+
+This note concerns the nontrivial range `D<M`; if `D>=M`, the desired main
+term lower bound for the diameter already holds.
+
+## 1. Exact residue multiplicities
+
+Let
+
+\[
+\Delta=\{a_j-a_i:0\le i<j<k\}.
+\]
+
+All elements of `Delta` are distinct and
+
+\[
+|\Delta|=\binom{k}{2}=\frac{M-1}{2}.
+\]
+
+For `1<=r<=(M-1)/2`, define
+
+\[
+m_r=1_\Delta(r)+1_\Delta(M-r).
+\tag{1}
+\]
+
+Because `Delta` lies in `[1,D]` and `D<M`,
+
+\[
+m_r\in\{0,1,2\}.
+\]
+
+There are `(M-1)/2` unordered nonzero residue pairs and
+
+\[
+\sum_{r=1}^{(M-1)/2}m_r=|\Delta|=\frac{M-1}{2}.
+\]
+
+Therefore
+
+\[
+\boxed{\#\{r:m_r=0\}=\#\{r:m_r=2\}.}
+\tag{2}
+\]
+
+In directed form, let
+
+\[
+\nu(t)=\#\{(i,j):i\ne j,\ a_j-a_i\equiv t\pmod M\}.
+\]
+
+Then `nu(t)` belongs to `{0,1,2}` for every nonzero residue, and the number of
+holes `nu=0` equals the number of duplicates `nu=2`.
+
+## 2. Protected initial residues
+
+Put
+
+\[
+g=M-D.
+\]
+
+For every `1<=r<g`, one has `M-r>D`, so the second indicator in (1) vanishes.
+Hence
+
+\[
+\boxed{m_r=1_\Delta(r)\in\{0,1\}\quad(1\le r<g).}
+\tag{3}
+\]
+
+No protected initial residue can be duplicated. A missing small difference
+must be compensated by a double residue pair elsewhere through (2).
+
+When every `m_r=1`, `A` is a cyclic planar difference set modulo `M`; cutting
+at its empty arc of length `g-1` recovers the interval ruler.
+
+## 3. Exact shifted pair-sum interpretation of duplicates
+
+A double pair `m_r=2` means that both `r` and `M-r` occur as positive
+ordinary differences. Thus there are indices with
+
+\[
+(a_j-a_i)+(a_\ell-a_m)=M,
+\]
+
+or equivalently
+
+\[
+a_j+a_\ell=M+a_i+a_m.
+\tag{4}
+\]
+
+Because `A` is Sidon, both unordered pair sums in (4) have unique
+representations. The cyclic defect is therefore an exact matching between a
+set of low pair sums and the corresponding pair sums shifted by `M`.
+Pairwise autocorrelation records only how many such matches exist; the
+incidence-coupled hierarchy records which endpoints participate.
+
+## 4. Gateway to the upper subpolynomial error
+
+Suppose one proves the following stability assertion uniformly for all
+`k`-mark rulers:
+
+\[
+M-D\le k^{1+o(1)}.
+\tag{5}
+\]
+
+Let `A subset {0,...,N-1}` be extremal and `k=|A|`. If its diameter is at least
+`M`, then `k^2-k+1<=N-1`. Otherwise (5) gives
+
+\[
+N-1\ge D\ge k^2-k+1-k^{1+o(1)}.
+\]
+
+The elementary bound `k=O(sqrt N)` then implies
+
+\[
+\boxed{F(N)\le\sqrt N+N^{o(1)}.}
+\tag{6}
+\]
+
+Thus the upper half of the subpolynomial-error assertion is exactly a
+`k^{1+o(1)}` stability theorem for the almost-perfect cyclic completion.
+Equation (5) is not proved in this repository.
+
+---
+
+# Translate-incidence hierarchy and the high-moment gateway
+
+This note records the first hierarchy that sees common vertex incidence rather
+than only pairwise lag autocorrelation.
+
+## 1. Exact moments for a planar difference set
+
+Let `D` be a cyclic `(M,k,1)` difference set, so
+
+\[
+M=k^2-k+1.
+\]
+
+Fix the interval
+
+\[
+I_H=\{0,1,\ldots,H-1\}\subset\mathbb Z/M\mathbb Z
+\]
+
+and define
+
+\[
+X_s=|(D+s)\cap I_H|,
+\qquad s\in\mathbb Z/M\mathbb Z.
+\tag{1}
+\]
+
+Double counting gives
+
+\[
+\boxed{\sum_sX_s=kH.}
+\tag{2}
+\]
+
+Every unordered pair of distinct points of `I_H` is contained in exactly one
+translate of `D`, because its oriented difference has exactly one ordered
+representation in `D`. Therefore
+
+\[
+\boxed{\sum_s\binom{X_s}{2}=\binom H2.}
+\tag{3}
+\]
+
+For every `r>=3`, an `r`-subset of `I_H` is contained in at most one translate
+of `D`: any two of its points already determine the translate. Hence
+
+\[
+\boxed{\sum_s\binom{X_s}{r}\le\binom Hr.}
+\tag{4}
+\]
+
+Equations (2)--(4) are exact incidence constraints. The second identity is
+pairwise; the higher inequalities retain common-translate compatibility.
+
+## 2. The second-moment plateau
+
+From (2) and (3),
+
+\[
+\sum_sX_s^2=H(k+H-1).
+\tag{5}
+\]
+
+Let `V=#{s:X_s>0}`. Cauchy--Schwarz gives
+
+\[
+V\ge\frac{k^2H}{k+H-1}.
+\tag{6}
+\]
+
+Thus the number `Z_0` of zero windows satisfies the exact bound
+
+\[
+\boxed{
+Z_0\le M-\frac{k^2H}{k+H-1}
+ =\frac{(k-1)(M-H)}{k+H-1}.}
+\tag{7}
+\]
+
+If the binary cyclic sequence `1_D` has a run of `Z` consecutive zeros, then
+for every `H<=Z`, at least `Z-H+1` cyclic intervals of length `H` are empty.
+Combining with (7), and taking `H=floor(Z/2)`, gives only
+
+\[
+Z=O(k^{3/2}).
+\tag{8}
+\]
+
+This is the exact second-moment source of the `N^{1/4}` barrier.
+
+## 3. Why the raw higher factorial bounds do not automatically help
+
+The right side of (4), divided by `M`, is of order `H^r/k^2`. If
+`mu=kH/M asymp H/k`, Poisson-scale factorial moments would be of order
+`mu^r=H^r/k^r`. For `r>=3`, (4) is weaker by a factor of order `k^{r-2}`.
+A two-point distribution concentrated at zero and at a value of order `mu`
+can saturate the first two moments while staying far below every bound (4).
+This is the **translate-clustering obstruction**.
+
+A separate estimate is therefore needed to rule out a population of rare,
+dense interval--translate intersections.
+
+## 4. Exact high-moment gateway theorem
+
+Let
+
+\[
+\mu=\frac1M\sum_sX_s=\frac{kH}{M}.
+\]
+
+Assume that, for some integer `r>=1`, the centered moment estimate
+
+\[
+\frac1M\sum_s|X_s-\mu|^{2r}\le C_r\mu^r
+\tag{9}
+\]
+
+holds for every interval length under consideration. At a zero window,
+`|X_s-mu|^{2r}=mu^{2r}`, so
+
+\[
+\frac{Z_0}{M}\le C_r\mu^{-r}.
+\tag{10}
+\]
+
+Let `Z>=4` be a zero run and take `H=floor(Z/2)`. Then
+
+\[
+Z-H+1\ge Z/2,
+\qquad H\ge Z/3.
+\]
+
+Using (10),
+
+\[
+\frac Z2
+\le M C_r\left(\frac{M}{kH}\right)^r
+\le M C_r\left(\frac{3M}{kZ}\right)^r.
+\]
+
+Therefore
+
+\[
+\boxed{
+Z^{r+1}\le 2\,3^r C_r\frac{M^{r+1}}{k^r}.}
+\tag{11}
+\]
+
+Since `M asymp k^2`, a fixed-order Poisson-scale moment bound gives
+
+\[
+Z\ll_r C_r^{1/(r+1)}k^{1+1/(r+1)}.
+\tag{12}
+\]
+
+If (9) holds for orders `r=r(k)` tending to infinity with
+
+\[
+\log C_{r(k)}=o(r(k)\log k),
+\]
+
+then
+
+\[
+\boxed{Z=k^{1+o(1)}.}
+\tag{13}
+\]
+
+This implication is unconditional; the moment hypothesis is the open part.
+It identifies an exact route from incidence control to subpolynomial cyclic
+gaps.
+
+## 5. Extension to an almost-perfect cyclic completion
+
+For the ruler reduction in `cyclic_defect_reduction.md`, let `nu(t)` be the
+directed cyclic difference multiplicity. For an interval `I_H`, the translated
+window counts satisfy
+
+\[
+\sum_sX_s(X_s-1)
+ =\sum_{x\ne y\in I_H}\nu(y-x).
+\tag{14}
+\]
+
+Thus holes and duplicates perturb the second moment by a weighted defect term.
+The third and higher moments count compatible collections of directed edges
+sharing one translate. They are exactly where the common gradient/vertex
+realization enters.
+
+The unresolved target is a stability version of (9) in which the right side
+also includes a quantitatively controlled contribution from the cyclic defect.
+Combined with the hole--duplicate balance and the protected initial residues,
+such an estimate would imply the stability bound `M-D<=k^{1+o(1)}`.
+
+## 6. Exact incidence-coupled Level-2 formulation
+
+For an ordered ruler introduce one-hot variables
+
+\[
+X_{i,\ell,t}=1_{\{a_{i+\ell}-a_i=t\}}.
+\]
+
+The exact polynomial constraints include
+
+\[
+X_{i,\ell,t}^2=X_{i,\ell,t},
+\qquad
+\sum_tX_{i,\ell,t}=1,
+\]
+
+\[
+X_{i,\ell,t}X_{j,m,t}=0
+\quad\text{for distinct intervals},
+\]
+
+and the completion localizers
+
+\[
+X_{i,\ell,t}X_{i+\ell,r,s}
+ =X_{i,\ell,t}X_{i+\ell,r,s}X_{i,\ell+r,t+s}.
+\tag{15}
+\]
+
+A Level-2 moment relaxation keeps all moments of degree at most two and the
+linearized consequences of (15) whose total degree fits the level. Unlike the
+uncoupled rank cone, this system ties each lag to the same vertex potential.
+No exact asymptotic optimum for this cone is claimed here.
+
+## 7. Exact pseudodistribution proving the raw factorial plateau
+
+For an integer `mu>=1`, define
+
+\[
+\mathbb P(X=0)=\frac1{\mu+1},
+\qquad
+\mathbb P(X=\mu+1)=\frac\mu{\mu+1}.
+\tag{16}
+\]
+
+Then
+
+\[
+\mathbb EX=\mu,
+\qquad
+\mathbb E(X)_2=\mu^2,
+\]
+
+and, for every `r>=2`,
+
+\[
+\mathbb E(X)_r
+ =\mu^2(\mu-1)(\mu-2)\cdots(\mu-r+2)
+ \le\mu^r.
+\tag{17}
+\]
+
+Thus even Poisson-scale *factorial* moments permit zero mass of order
+`1/mu`, exactly the amount corresponding to the `k^{3/2}` gap scale. By
+contrast,
+
+\[
+\mathbb E|X-\mu|^{2r}
+ =\frac{\mu^{2r}+\mu}{\mu+1}
+ \asymp\mu^{2r-1},
+\tag{18}
+\]
+
+which is far above the centered Poisson scale `mu^r` when `r>1`. This proves
+that the gateway must control centered fluctuations or an equivalent
+incidence-localizer; raw factorial counts cannot suffice.
+
+---
+
+# Exact plateau for the uncoupled rank-aggregate relaxation
+
+Let
+
+\[
+d_{i,\ell}=a_{i+\ell}-a_i.
+\]
+
+The following information is imposed:
+
+- all completion identities
+  `d_{i,ell+r}=d_{i,ell}+d_{i+ell,r}`;
+- rank-sum symmetry and concavity;
+- every aggregate band floor
+
+\[
+\sum_{\ell\le L}\sum_i d_{i,\ell}
+\ge\frac{M_L(M_L+1)}2,
+\quad
+M_L=kL-\frac{L(L+1)}2.
+\]
+
+No one-hot variable identifies which integer lag belongs to which interval.
+
+For even `k=2n`, put essentially all diameter `D` in the central gap. For
+`L<=n`, the central gap appears in
+
+\[
+P_L=\frac{L(L+1)}2
+\]
+
+band intervals, so
+
+\[
+Q_L=P_LD.
+\]
+
+The floor requires
+
+\[
+D\ge\rho(k,L):=\frac{M_L(M_L+1)}{L(L+1)}.
+\]
+
+Writing `x=L+1`, exact algebra gives
+
+\[
+\begin{aligned}
+k^2-\rho(k,L)
+={}&\frac{k^2}{x}+kx-k-\frac{k}{x}\\
+&-\frac{x^2}{4}+\frac{x}{4}+\frac12.
+\end{aligned}
+\tag{1}
+\]
+
+Uniformly for `L<=k/2`, the right side is at least
+
+\[
+2k^{3/2}-O(k)
+\]
+
+at its critical minimum. For `L>k/2`, the corresponding floor is only
+`(3/4)k^2+O(k)`. Consequently, for every fixed `beta<2`,
+
+\[
+D=k^2-\beta k^{3/2}
+\]
+
+passes every aggregate floor for all sufficiently large even `k`.
+
+Small positive dyadic side gaps may be inserted and subtracted from the
+central gap. This makes the marks strictly increasing while preserving every
+inequality. Because the variables come from an actual gap vector, all
+completion identities hold exactly, the moment matrix is rank one and PSD,
+
+\[
+R_\ell=R_{k-\ell},
+\]
+
+and
+
+\[
+R_{\ell+1}-2R_\ell+R_{\ell-1}
+=-(g_\ell+g_{k-\ell})\le0.
+\]
+
+The pairwise-autocorrelation deficit in ruler normalization is
+
+\[
+\beta_0=\frac{4\sqrt2}{3}<2.
+\]
+
+Therefore this uncoupled rank-aggregate layer admits the pairwise value and
+cannot improve it. The missing information is the incidence equivalence
+
+\[
+\text{lag }t\text{ is occupied}
+\Longleftrightarrow
+\text{one specific interval }d_{i,\ell}\text{ equals }t,
+\]
+
+with its degree-two localizers.
+
+---
+
+# Exact quotient/residue carry partition
+
+Fix an integer block size `B`. Write every mark as
+
+\[
+a_i=Bq_i+s_i,
+\qquad0\le s_i<B.
+\]
+
+For `i<j`, put `t=a_j-a_i` and write `t=Bd+r`, `0<=r<B`. Then exactly one of
+the following holds:
+
+1. **No carry:** `s_j>=s_i`, and
+   \[
+   d=q_j-q_i,
+   \qquad r=s_j-s_i.
+   \]
+
+2. **Borrow/carry:** `s_j<s_i`, and
+   \[
+   d=q_j-q_i-1,
+   \qquad r=B+s_j-s_i.
+   \]
+
+Thus full coverage of a block of consecutive differences imposes a
+complementarity relation between non-carry edges at row lag `d` and carry
+edges at row lag `d+1`.
+
+Counting only how many edges fall in each carry class recovers an inversion
+balance and reaches the same square-root critical scale as pairwise smoothing.
+The information that remains unused is **residue-level complementarity**: for
+every individual `r`, exactly one compatible endpoint pair must realize
+`Bd+r`. The checker verifies this partition on the 10-mark planar ruler whose
+initial differences are exactly `1,...,35`.
+
+This route stopped at the **carry-count plateau**. A further step must couple
+residue values and shared vertices, not only inversion totals.
+
+---
+
+# Exact spectral-selector factorization for a perfect ruler
+
+This is a separate attempt to move beyond autocorrelation smoothing by keeping
+the full spectral factor.
+
+Let
+
+\[
+A=\{0=a_0<\cdots<a_{k-1}=D\}
+\]
+
+be a perfect cyclic ruler modulo
+
+\[
+M=k^2-k+1,
+\]
+
+meaning that its positive differences choose exactly one element from every
+pair `{r,M-r}`. Put `g=M-D`.
+
+Define
+
+\[
+P(z)=\sum_{a\in A}z^a,
+\qquad
+P^\#(z)=z^DP(z^{-1}),
+\]
+
+and
+
+\[
+Q(z)=P(z)P^\#(z)-(k-1)z^D.
+\tag{1}
+\]
+
+## 1. Binary selector polynomial
+
+The coefficient of `z^{D+d}` in `P P#` is the number of ordered pairs with
+difference `d`. The ruler property makes every nonzero coefficient zero or
+one, and the center coefficient becomes one after subtracting `k-1`. Hence
+`Q` is a binary polynomial with exactly
+
+\[
+1+k(k-1)=M
+\]
+
+nonzero coefficients.
+
+Those exponents represent every residue modulo `M` exactly once. Therefore
+
+\[
+Q(z)\equiv S_M(z):=1+z+\cdots+z^{M-1}\pmod{z^M-1}.
+\tag{2}
+\]
+
+There is a unique binary selector polynomial
+
+\[
+E(z)=\sum_{r=0}^{M-1}\varepsilon_rz^r,
+\qquad\varepsilon_r\in\{0,1\},
+\]
+
+such that
+
+\[
+Q(z)=S_M(z)+(z^M-1)E(z).
+\tag{3}
+\]
+
+Since `z^M-1=(z-1)S_M`,
+
+\[
+\boxed{Q(z)=S_M(z)\bigl(1+(z-1)E(z)\bigr).}
+\tag{4}
+\]
+
+This is an integral factorization, not only a root-of-unity identity.
+
+## 2. Exact support and complement symmetry
+
+Since `deg Q=2D=2M-2g`, a lifted exponent `r+M` can occur only when
+
+\[
+0\le r\le M-2g.
+\]
+
+Put
+
+\[
+L=M-2g+1.
+\]
+
+Then `E` is supported on `{0,...,L-1}`. Polynomial `Q` is palindromic about
+`D`. If the representative of residue `r` is lifted to `r+M`, its mirror is
+the unlifted exponent `L-1-r`; conversely an unlifted `r` mirrors to a lifted
+`L-1-r`. Hence
+
+\[
+\boxed{\varepsilon_r+\varepsilon_{L-1-r}=1
+\quad(0\le r<L).}
+\tag{5}
+\]
+
+In particular, `L` is even and
+
+\[
+\boxed{E(1)=L/2=(M+1)/2-g.}
+\tag{6}
+\]
+
+The same identity follows by differentiating (4) at one: palindromy gives
+`Q'(1)=DM`, while `S_M'(1)=M(M-1)/2`.
+
+## 3. What this machinery sees and what it does not
+
+Equations (4)--(6) retain the exact spectral factorization and ordinary
+support gap. They reduce the residue-lift pattern to a balanced
+anti-palindromic binary word. But that class has `2^{L/2}` elements and exists
+for every admissible `g`; divisibility and palindromy alone impose no
+subpolynomial bound on `g`.
+
+The missing constraint is that
+
+\[
+Q+(k-1)z^D=P P^\#
+\]
+
+must have a **binary spectral factor** `P` whose exponents form a gradient
+set. Characterizing which selector words admit that factor is equivalent to a
+nonlinear incidence-realizability problem. This is the
+**selector-factor plateau**.
+
+---
+
+# Final audit conclusion
+
+The exact package closes the pairwise-autocorrelation optimization and several
+strictly stronger but uncoupled relaxations. It does not close the
+incidence-coupled stability problem. The missing theorem is a bound of the form
+
+\[
+M-D\le k^{1+o(1)}
+\]
+
+for the almost-perfect cyclic completion, or an equivalent family of centered
+translate-incidence moment estimates with orders tending to infinity.
+
+Until that statement is proved, the repository makes no claim of a
+subpolynomial error term.
+
+
+================================================================================
+FILE: LICENSE
+================================================================================
+MIT License
+
+Copyright (c) 2026
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+================================================================================
+FILE: MANIFEST.md
+================================================================================
+# Artifact manifest
+
+## Exact data
+
+- `certificates/m80/certificate.json`: complete integer data for the `m=80`,
+  `R=8`, `L=4` certificate.
+
+## Exact verifiers
+
+- `certificates/m80/verify_fraction.py`
+- `certificates/m80/verify_sympy.py`
+- every script in `checkers/`
+
+## Proof notes
+
+- `FULL_PROOF_NOTE.md`
+- every file in `proofs/`
+
+## Research audit
+
+- `CLAIMS.md`
+- `research/dead_ends.md`
+- `research/next_target.md`
+
+The archive contains no generated binary dependency and no inaccessible
+external artifact. The only optional dependency is SymPy, used by the
+independent symbolic checkers.
+
+- `ALL_CONTENTS.txt`: concatenated complete text/source contents of the repository.
+
+
+================================================================================
+FILE: Makefile
+================================================================================
+.PHONY: core all clean
+
+core:
+	python3 run_all.py --core
+
+all:
+	python3 run_all.py --all
+
+clean:
+	find . -type d -name __pycache__ -prune -exec rm -rf {} +
+
+
+================================================================================
+FILE: README.md
+================================================================================
+# Sidon exact-research package
+
+This repository is a hostile-referee audit and exact-reproduction package for
+work on the maximal size
+
+\[
+F(N)=\max\{|A|:A\subseteq\{0,\dots,N-1\}\text{ is Sidon}\}.
+\]
+
+## Status first
+
+This repository **does not claim** a proof of
+
+\[
+F(N)=\sqrt N+N^{o(1)}
+\]
+
+or of \(F(N)=\sqrt N+o(N^{1/4})\). Those assertions remain the research target.
+The package separates proved statements, exact finite certificates, symbolic
+identity checks, and conjectural/conditional routes. `CLAIMS.md` is the claim
+ledger.
+
+The strongest fully finite artifact in this package is the exact `m=80`
+vector-smoothing certificate proving, conditional only on the written covering
+lemma,
+
+\[
+F(N)\le \sqrt N+0.942881N^{1/4}+O(1).
+\]
+
+The package also contains a self-contained analytic proof of the continuum
+one-sided kernel-majorant barrier
+
+\[
+\inf\sqrt{AB}=\frac{2\sqrt2}{3},
+\]
+
+including the delay profile, dual renewal kernel, and square-and-potential
+decomposition. The symbolic scripts check the algebraic identities; the
+functional-analytic justifications are written out in the proof notes and are
+not misrepresented as computer proofs.
+
+Finally, the repository records an exact incidence hierarchy for cyclic planar
+difference sets and a conditional high-moment gateway. It also names the
+obstructions that caused each explored route to stop.
+
+## Reproduce everything
+
+Standard-library checks:
+
+```bash
+python3 run_all.py --core
+```
+
+All checks, including independent SymPy verification:
+
+```bash
+python3 -m pip install sympy
+python3 run_all.py --all
+```
+
+Or with `make`:
+
+```bash
+make core
+make all
+```
+
+Every command exits nonzero on failure. The exact certificate verifiers use
+explicit exceptions rather than Python `assert`, so optimization mode cannot
+silence the checks.
+
+## One-command reproduction by artifact
+
+| Artifact | Command |
+|---|---|
+| m=80 certificate, standard library | `python3 certificates/m80/verify_fraction.py` |
+| m=80 certificate, independent SymPy | `python3 certificates/m80/verify_sympy.py` |
+| Delay-profile algebra | `python3 checkers/check_delay_profile_symbolic.py` |
+| Correlation `C(r)` derivation | `python3 checkers/check_C_derivation_symbolic.py` |
+| Decomposition (19) algebra | `python3 checkers/check_decomposition19_symbolic.py` |
+| Pairwise pseudo-configuration | `python3 checkers/check_pairwise_pseudo.py` |
+| Rank-aggregate plateau formulas | `python3 checkers/check_rank_aggregate_plateau.py` |
+| Cyclic incidence moments and gap examples | `python3 checkers/check_translate_incidence.py` |
+| Cyclic defect identities | `python3 checkers/check_cyclic_defect.py` |
+| Carry/block partition identities | `python3 checkers/check_carry_partition.py` |
+
+## Directory map
+
+- `ALL_CONTENTS.txt`: every text/source artifact concatenated into one directly readable file.
+- `CLAIMS.md`: exact status of every mathematical claim.
+- `proofs/vector_covering_lemma.md`: discrete one-sided and symmetric
+  vector-valued covering lemmas.
+- `proofs/continuum_barrier.md`: the continuum dual certificate and barrier.
+- `proofs/delay_profile.md`: delay equation, transform, decay, and exact
+  integrals.
+- `proofs/decomposition19.md`: full square-and-potential calculation.
+- `proofs/incidence_hierarchy.md`: translate-incidence moments, the
+  high-moment gateway, and the exact point at which the argument remains open.
+- `proofs/cyclic_defect_reduction.md`: almost-perfect cyclic completion of an
+  interval ruler.
+- `proofs/rank_aggregate_plateau.md`: why uncoupled rank information does not
+  improve the pairwise barrier.
+- `research/dead_ends.md`: every attempted route and its named obstruction.
+- `research/next_target.md`: the smallest currently admissible strengthening.
+- `certificates/m80/`: complete integer data and two exact verifiers.
+
+## Conventions
+
+A Sidon set here means that every nonzero ordered difference has at most one
+representation. This is equivalent to uniqueness of unordered pair sums when
+diagonal pairs are included.
+
+No decimal is used as evidence. Decimals printed by verifiers are display-only;
+all acceptance decisions use integers or exact rationals.
+
+
+================================================================================
+FILE: REFERENCES.md
+================================================================================
+# Primary references
+
+The repository is self-contained for its proofs and exact checks. These
+references record the surrounding state of the problem as of 24 July 2026.
+
+1. Jianfeng Hou and Hongbin Zhao, *Vector-valued smoothing for finite Sidon
+   sets*, arXiv:2607.01169. The public manuscript proves an exact rational
+   coefficient improvement within symmetric vector smoothing.
+2. David B. Hulak, Arthur F. Ramos, and Ruy J. G. B. de Queiroz,
+   *Formalizing the Prime-Field Singer Construction and Sidon Set
+   Infrastructure in Lean 4*, arXiv:2605.03274. This records Erdős Problem 30
+   as open and formalizes the conditional dependence on both an upper
+   subpolynomial error and prime-gap input.
+3. Daniel Carter, Zach Hunter, and Kevin O'Bryant, *On the Diameter of Finite
+   Sidon Sets*, arXiv:2310.20032; Acta Mathematica Hungarica 175 (2025).
+4. Sean Eberhard and Freddie Manners, *The apparent structure of dense Sidon
+   sets*, arXiv:2107.05744.
+5. James Singer, *A theorem in finite projective geometry and some applications
+   to number theory*, Transactions of the AMS 43 (1938), 377--385.
+
+
+================================================================================
+FILE: REPOSITORY_TREE.txt
+================================================================================
+CLAIMS.md
+FULL_PROOF_NOTE.md
+LICENSE
+MANIFEST.md
+Makefile
+README.md
+REFERENCES.md
+REPOSITORY_TREE.txt
+REPRODUCTION_LOG.txt
+certificates/m80/certificate.json
+certificates/m80/verify_fraction.py
+certificates/m80/verify_sympy.py
+checkers/check_C_derivation_symbolic.py
+checkers/check_carry_partition.py
+checkers/check_cyclic_defect.py
+checkers/check_decomposition19_symbolic.py
+checkers/check_delay_profile_symbolic.py
+checkers/check_factorial_moment_plateau.py
+checkers/check_pairwise_pseudo.py
+checkers/check_rank_aggregate_plateau.py
+checkers/check_spectral_selector.py
+checkers/check_translate_incidence.py
+proofs/carry_partition.md
+proofs/continuum_barrier.md
+proofs/cyclic_defect_reduction.md
+proofs/decomposition19.md
+proofs/delay_profile.md
+proofs/incidence_hierarchy.md
+proofs/rank_aggregate_plateau.md
+proofs/spectral_selector_factorization.md
+proofs/vector_covering_lemma.md
+requirements.txt
+research/dead_ends.md
+research/next_target.md
+run_all.py
+
+
+================================================================================
+FILE: REPRODUCTION_LOG.txt
+================================================================================
+Command: python3 run_all.py --all
+
+
+=== certificates/m80/verify_fraction.py ===
+PASS: all exact Fraction checks completed.
+R=8, m=80, L=4
+covering constraints checked: 321
+eta = 34717/500000000000000000
+a = 4115932823347987227434653323892149/3125000000000000000000000000000000
+b = 6749870497482795806020646413227807947570779/10000000000000000000000000000000000000000000
+display-only sqrt(a*b) = 0.9428809220076545272301910604970485474104503935414778924771039025081013
+exact comparison: a*b < (942881/1000000)^2
+target^2-a*b = 4596093603144230878171801638695290410425594154672227942497334060085929/31250000000000000000000000000000000000000000000000000000000000000000000000000
+least positive slack: q=317, 1729604192871682222771/62500000000000000000000000000000000000000
+equality constraints: [320]
+
+=== checkers/check_cyclic_defect.py ===
+PASS: (0, 1, 4, 10)
+{'k': 4, 'D': 10, 'M': 13, 'g': 3, 'holes': 4, 'duplicates': 4}
+PASS: (0, 1, 6, 10, 23, 26, 34, 41, 53, 55)
+{'k': 10, 'D': 55, 'M': 91, 'g': 36, 'holes': 0, 'duplicates': 0}
+
+=== checkers/check_carry_partition.py ===
+PASS: exact quotient/residue carry partition for differences 1,...,35.
+
+=== checkers/check_translate_incidence.py ===
+PASS: (M,k)=(13,4), maximum zero run=5, gap distance=6
+PASS: (M,k)=(91,10), maximum zero run=35, gap distance=36
+
+=== checkers/check_factorial_moment_plateau.py ===
+PASS: exact two-level factorial-moment plateau for m=2,...,24.
+P(X=0)=1/(m+1), P(X=m+1)=m/(m+1).
+
+=== certificates/m80/verify_sympy.py ===
+PASS: independent SymPy rational checks completed.
+a = 4115932823347987227434653323892149/3125000000000000000000000000000000
+b = 6749870497482795806020646413227807947570779/10000000000000000000000000000000000000000000
+target^2-a*b = 4596093603144230878171801638695290410425594154672227942497334060085929/31250000000000000000000000000000000000000000000000000000000000000000000000000
+equality q = [320]
+
+=== checkers/check_delay_profile_symbolic.py ===
+PASS: exact delay-profile symbolic identities.
+Laplace series at zero: -1/3 + s/18 - s**2/270 - s**3/3240 + O(s**4)
+A0 = 4/3
+B0 = 2/3
+A0*B0 = 8/9
+
+=== checkers/check_C_derivation_symbolic.py ===
+PASS: exact C/D renewal algebra.
+functional residual = 0
+C(0) = 0
+
+=== checkers/check_decomposition19_symbolic.py ===
+PASS: exact decomposition (19) coefficient algebra.
+endpoint square (0<=x<=1): (q + 2*x - 2)**2/4
+endpoint integral = 1/3
+
+=== checkers/check_pairwise_pseudo.py ===
+PASS: pairwise pseudoconfiguration identities.
+sum_l f_l(t) = lam
+nontrivial cyclic spectral value = k - 1
+
+=== checkers/check_rank_aggregate_plateau.py ===
+PASS: exact rank-aggregate plateau algebra.
+k^2-rho(k,L) = k**2/x + k*x - k - k/x - x**2/4 + x/4 + 1/2
+
+=== checkers/check_spectral_selector.py ===
+PASS: exact spectral-selector factorization.
+M=91, D=55, g=36, selector length L=20, selector weight=10
+selector bits = 00001101010101001111
+
+PASS: requested reproduction suite completed.
+
+Archive integrity:
+  ZIP: verified with unzip -t
+  TAR.GZ: verified by tar -tzf
+
+
+================================================================================
+FILE: certificates/m80/certificate.json
+================================================================================
+{
+  "R": 8,
+  "m": 80,
+  "L": 4,
+  "weights_den": 1000000000000,
+  "weights_num": [
+    366520539604,
+    78629188280,
+    1284689693,
+    264859665920,
+    143225848533,
+    23776477449,
+    55875399502,
+    65828191019
+  ],
+  "kernel_den": 1000000000000,
+  "kernels_num": [
+    [
+      2530091440,
+      2519443895,
+      3367329095,
+      3392046994,
+      4073569936,
+      3763882119,
+      4017088364,
+      3636048317,
+      3403717818,
+      3742496730,
+      4952856482,
+      3703330641,
+      4180307341,
+      4695154903,
+      5552612471,
+      6607397138,
+      7349236755,
+      8351105315,
+      7950902197,
+      8471111539,
+      11745328372,
+      11668378647,
+      13623889857,
+      12885061652,
+      14345406363,
+      13341606071,
+      14892443506,
+      16585048396,
+      20454926554,
+      28190005956,
+      16197921008,
+      18084755079,
+      22731483540,
+      24855103566,
+      25460439832,
+      27061957598,
+      26446168623,
+      28588316138,
+      27638436498,
+      28943593254,
+      28943593254,
+      27638436498,
+      28588316138,
+      26446168623,
+      27061957598,
+      25460439832,
+      24855103566,
+      22731483540,
+      18084755079,
+      16197921008,
+      28190005956,
+      20454926554,
+      16585048396,
+      14892443506,
+      13341606071,
+      14345406363,
+      12885061652,
+      13623889857,
+      11668378647,
+      11745328372,
+      8471111539,
+      7950902197,
+      8351105315,
+      7349236755,
+      6607397138,
+      5552612471,
+      4695154903,
+      4180307341,
+      3703330641,
+      4952856482,
+      3742496730,
+      3403717818,
+      3636048317,
+      4017088364,
+      3763882119,
+      4073569936,
+      3392046994,
+      3367329095,
+      2519443895,
+      2530091440
+    ],
+    [
+      7605087696,
+      7848020166,
+      13950983935,
+      13362166476,
+      17165111776,
+      15743228734,
+      18519554512,
+      17375460740,
+      19371113667,
+      21201753238,
+      18585535528,
+      15316330133,
+      17034690103,
+      14972634848,
+      15560925853,
+      13374760829,
+      12195759964,
+      10672452129,
+      9352802933,
+      8437412222,
+      8137529545,
+      8163677827,
+      7792336015,
+      7858871092,
+      7773961793,
+      7502212657,
+      7579838805,
+      7490687308,
+      7694822758,
+      8061044640,
+      8163529387,
+      8290678380,
+      9306207708,
+      10565584703,
+      12599607296,
+      15151056116,
+      17282854960,
+      18479872360,
+      18346662379,
+      16113178789,
+      16113178789,
+      18346662379,
+      18479872360,
+      17282854960,
+      15151056116,
+      12599607296,
+      10565584703,
+      9306207708,
+      8290678380,
+      8163529387,
+      8061044640,
+      7694822758,
+      7490687308,
+      7579838805,
+      7502212657,
+      7773961793,
+      7858871092,
+      7792336015,
+      8163677827,
+      8137529545,
+      8437412222,
+      9352802933,
+      10672452129,
+      12195759964,
+      13374760829,
+      15560925853,
+      14972634848,
+      17034690103,
+      15316330133,
+      18585535528,
+      21201753238,
+      19371113667,
+      17375460740,
+      18519554512,
+      15743228734,
+      17165111776,
+      13362166476,
+      13950983935,
+      7848020166,
+      7605087696
+    ],
+    [
+      4757383543,
+      5584781127,
+      6177185893,
+      6583523975,
+      6905574573,
+      7461726352,
+      8224991134,
+      9371940544,
+      10993322224,
+      13170544270,
+      12027018736,
+      12674586779,
+      13021527758,
+      13080058000,
+      12949481571,
+      12643363620,
+      12520520553,
+      12613191403,
+      12978683735,
+      13700021419,
+      13900551800,
+      15509220592,
+      16697287607,
+      17540233285,
+      18075524676,
+      18397192948,
+      18537830454,
+      18696902935,
+      18962945984,
+      19361195571,
+      13401152151,
+      13019566243,
+      12449107512,
+      11773252258,
+      11067774915,
+      10365045654,
+      10244836086,
+      10541887473,
+      11333689919,
+      12685374728,
+      12685374728,
+      11333689919,
+      10541887473,
+      10244836086,
+      10365045654,
+      11067774915,
+      11773252258,
+      12449107512,
+      13019566243,
+      13401152151,
+      19361195571,
+      18962945984,
+      18696902935,
+      18537830454,
+      18397192948,
+      18075524676,
+      17540233285,
+      16697287607,
+      15509220592,
+      13900551800,
+      13700021419,
+      12978683735,
+      12613191403,
+      12520520553,
+      12643363620,
+      12949481571,
+      13080058000,
+      13021527758,
+      12674586779,
+      12027018736,
+      13170544270,
+      10993322224,
+      9371940544,
+      8224991134,
+      7461726352,
+      6905574573,
+      6583523975,
+      6177185893,
+      5584781127,
+      4757383543
+    ],
+    [
+      357265339,
+      535520264,
+      809346904,
+      1252406094,
+      1911679029,
+      3229781062,
+      4812712634,
+      6632648383,
+      8875432775,
+      11276014411,
+      15810940731,
+      17430636096,
+      19178651077,
+      19266471314,
+      21477462045,
+      19854387275,
+      19794403914,
+      16788560448,
+      12626679019,
+      9896725450,
+      21972048548,
+      17796954822,
+      15400234133,
+      14525659568,
+      12591211716,
+      14104455401,
+      13000184788,
+      14966459138,
+      13902891637,
+      13461961277,
+      13757372166,
+      13526216537,
+      15920456396,
+      15117377132,
+      18471479126,
+      15785550379,
+      15691231715,
+      12118883770,
+      7957968022,
+      8113679465,
+      8113679465,
+      7957968022,
+      12118883770,
+      15691231715,
+      15785550379,
+      18471479126,
+      15117377132,
+      15920456396,
+      13526216537,
+      13757372166,
+      13461961277,
+      13902891637,
+      14966459138,
+      13000184788,
+      14104455401,
+      12591211716,
+      14525659568,
+      15400234133,
+      17796954822,
+      21972048548,
+      9896725450,
+      12626679019,
+      16788560448,
+      19794403914,
+      19854387275,
+      21477462045,
+      19266471314,
+      19178651077,
+      17430636096,
+      15810940731,
+      11276014411,
+      8875432775,
+      6632648383,
+      4812712634,
+      3229781062,
+      1911679029,
+      1252406094,
+      809346904,
+      535520264,
+      357265339
+    ],
+    [
+      3710216784,
+      3969186699,
+      5540904912,
+      6443833835,
+      8122244437,
+      10502742992,
+      12474567477,
+      14326065384,
+      16085605392,
+      11083864381,
+      11864490187,
+      15291590324,
+      15757854594,
+      14363854344,
+      13829234614,
+      11067641608,
+      10337846443,
+      8169777457,
+      7758445899,
+      7467312230,
+      7729526153,
+      8318809060,
+      9729925342,
+      13784703576,
+      16811420004,
+      23499512594,
+      26206331317,
+      30318332694,
+      30162397560,
+      12252875264,
+      8135169030,
+      10015200026,
+      10719483345,
+      10964587686,
+      12713605882,
+      13182888864,
+      14122593266,
+      12646609940,
+      11449461263,
+      9069287141,
+      9069287141,
+      11449461263,
+      12646609940,
+      14122593266,
+      13182888864,
+      12713605882,
+      10964587686,
+      10719483345,
+      10015200026,
+      8135169030,
+      12252875264,
+      30162397560,
+      30318332694,
+      26206331317,
+      23499512594,
+      16811420004,
+      13784703576,
+      9729925342,
+      8318809060,
+      7729526153,
+      7467312230,
+      7758445899,
+      8169777457,
+      10337846443,
+      11067641608,
+      13829234614,
+      14363854344,
+      15757854594,
+      15291590324,
+      11864490187,
+      11083864381,
+      16085605392,
+      14326065384,
+      12474567477,
+      10502742992,
+      8122244437,
+      6443833835,
+      5540904912,
+      3969186699,
+      3710216784
+    ],
+    [
+      6674456299,
+      6585419029,
+      7228213373,
+      7276375946,
+      7651488055,
+      7848567020,
+      8213296223,
+      8446066601,
+      8874219624,
+      9244844220,
+      10957651099,
+      11286468994,
+      12095926160,
+      12619716858,
+      13285177561,
+      13881371982,
+      14217857565,
+      14493997709,
+      14594500867,
+      14788999243,
+      15670660454,
+      15312348655,
+      14942272437,
+      14967149798,
+      14934595384,
+      14695449877,
+      14758217083,
+      14568114060,
+      14508693194,
+      14525434318,
+      16130928452,
+      15373751377,
+      14942054283,
+      14528599221,
+      14262615144,
+      13924701122,
+      13615108572,
+      13274296400,
+      12745002883,
+      12055392858,
+      12055392858,
+      12745002883,
+      13274296400,
+      13615108572,
+      13924701122,
+      14262615144,
+      14528599221,
+      14942054283,
+      15373751377,
+      16130928452,
+      14525434318,
+      14508693194,
+      14568114060,
+      14758217083,
+      14695449877,
+      14934595384,
+      14967149798,
+      14942272437,
+      15312348655,
+      15670660454,
+      14788999243,
+      14594500867,
+      14493997709,
+      14217857565,
+      13881371982,
+      13285177561,
+      12619716858,
+      12095926160,
+      11286468994,
+      10957651099,
+      9244844220,
+      8874219624,
+      8446066601,
+      8213296223,
+      7848567020,
+      7651488055,
+      7276375946,
+      7228213373,
+      6585419029,
+      6674456299
+    ],
+    [
+      8551852899,
+      7897078009,
+      11470438729,
+      10776197378,
+      12451327029,
+      11721228312,
+      12754467899,
+      12285953124,
+      13190131390,
+      13918043040,
+      15594833390,
+      13820689866,
+      14925431182,
+      14621099973,
+      15386384341,
+      14561299381,
+      13862486528,
+      12663680447,
+      11244486994,
+      9919618044,
+      10490051479,
+      10566926578,
+      10301146579,
+      10508254126,
+      10569132533,
+      10233246959,
+      10413536356,
+      10235499505,
+      10438822091,
+      10953632142,
+      11783359666,
+      11238331475,
+      11878220093,
+      12815659639,
+      14359808994,
+      16371540519,
+      17394863019,
+      17735347199,
+      16501880481,
+      13594012612,
+      13594012612,
+      16501880481,
+      17735347199,
+      17394863019,
+      16371540519,
+      14359808994,
+      12815659639,
+      11878220093,
+      11238331475,
+      11783359666,
+      10953632142,
+      10438822091,
+      10235499505,
+      10413536356,
+      10233246959,
+      10569132533,
+      10508254126,
+      10301146579,
+      10566926578,
+      10490051479,
+      9919618044,
+      11244486994,
+      12663680447,
+      13862486528,
+      14561299381,
+      15386384341,
+      14621099973,
+      14925431182,
+      13820689866,
+      15594833390,
+      13918043040,
+      13190131390,
+      12285953124,
+      12754467899,
+      11721228312,
+      12451327029,
+      10776197378,
+      11470438729,
+      7897078009,
+      8551852899
+    ],
+    [
+      3458156278,
+      3604859484,
+      4108054731,
+      4427002873,
+      4936363517,
+      5476418799,
+      6079137182,
+      6497207775,
+      7072907708,
+      7398526251,
+      9128511720,
+      9381753751,
+      9754353124,
+      9888980871,
+      10150026803,
+      10440559947,
+      10799569532,
+      11177023225,
+      11572098066,
+      11916280981,
+      16649050835,
+      19445911170,
+      21643537794,
+      24981421969,
+      27578724123,
+      28961036457,
+      28520645875,
+      25389373845,
+      21015719828,
+      15841960818,
+      15549482960,
+      13502969957,
+      12332015823,
+      11399599437,
+      10882885449,
+      10451654263,
+      10189656082,
+      9926632103,
+      9461497600,
+      9008430994,
+      9008430994,
+      9461497600,
+      9926632103,
+      10189656082,
+      10451654263,
+      10882885449,
+      11399599437,
+      12332015823,
+      13502969957,
+      15549482960,
+      15841960818,
+      21015719828,
+      25389373845,
+      28520645875,
+      28961036457,
+      27578724123,
+      24981421969,
+      21643537794,
+      19445911170,
+      16649050835,
+      11916280981,
+      11572098066,
+      11177023225,
+      10799569532,
+      10440559947,
+      10150026803,
+      9888980871,
+      9754353124,
+      9381753751,
+      9128511720,
+      7398526251,
+      7072907708,
+      6497207775,
+      6079137182,
+      5476418799,
+      4936363517,
+      4427002873,
+      4108054731,
+      3604859484,
+      3458156278
+    ]
+  ],
+  "boundary_den": 1000000000000,
+  "boundary_num": [
+    [
+      103731778194,
+      103295294413,
+      140651227302,
+      141653762879,
+      173122897260,
+      160440123920,
+      175135320874,
+      159210134787,
+      154366038473,
+      167554744298,
+      221738733787,
+      170137947751,
+      195608364893,
+      215055482817,
+      256762081970,
+      298832418702,
+      336841432164,
+      377794074525,
+      369930400677,
+      392159264066,
+      534747329007,
+      533048961812,
+      625135807235,
+      596258488962,
+      670346063543,
+      629883207413,
+      709533043389,
+      778609243570,
+      955329149140,
+      1273869168782,
+      804679010631,
+      891408770924,
+      1092667175265,
+      1191273662649,
+      1231869401395,
+      1311535300022,
+      1303080883173,
+      1406903595986,
+      1384540559308,
+      1456643103095,
+      1472665073269,
+      1439549435609,
+      1494916104370,
+      1426656724409,
+      1469710365291,
+      1421909674243,
+      1415974493615,
+      1345572989165,
+      1173795383463,
+      1111341903842,
+      1617448163872,
+      1313660357237,
+      1182091006259,
+      1118444715295,
+      1078665241982,
+      1123978318018,
+      1086914570523,
+      1122497175683,
+      1064204971614,
+      1073540558826,
+      959725104157,
+      944811458866,
+      978798885747,
+      943764403293,
+      931778646061,
+      893699154637,
+      876673205571,
+      859778754790,
+      857926618258,
+      912947979613,
+      880981186809,
+      872258533241,
+      898642111823,
+      919213572041,
+      926349812428,
+      944510105832,
+      934264030658,
+      939168240558,
+      921845242255,
+      928322076224,
+      841595031912,
+      847796405296,
+      860041470508,
+      866408620445,
+      878026606499,
+      884527616525,
+      895649163360,
+      902630250371,
+      913662450065,
+      921215441931,
+      932644234479,
+      940057262537,
+      950417796858,
+      959304236884,
+      969286833997,
+      977909042231,
+      987098537279,
+      994884771267,
+      1003354364305,
+      1010311485615,
+      1019187406960,
+      1025762783107,
+      1031296586577,
+      1038078866833,
+      1041449315806,
+      1049123621095,
+      1050727012923,
+      1059601468866,
+      1059252578671,
+      1066618240519,
+      1061850766806,
+      1061444210588,
+      1068275201972,
+      1065689870125,
+      1067662994093,
+      1062547937189,
+      1063555857541,
+      1056321460420,
+      1057565977308,
+      1047556371219,
+      1049389653932,
+      1037329022989,
+      1038807776431,
+      1027273056375,
+      1027405508790,
+      1017287933081,
+      1016348404096,
+      1007173848873,
+      1006361503861,
+      998717441850,
+      1002169259078,
+      995896371467,
+      986794800189,
+      987955420124,
+      981914006779,
+      984692988364,
+      979494612237,
+      981210769582,
+      976808991102,
+      977679380344,
+      974625390365,
+      975285142414,
+      974997513686,
+      976046664701,
+      974903166580,
+      976854439924,
+      975982252265,
+      978933941326,
+      978465258232,
+      981912121872,
+      981478239802,
+      983637201601,
+      983990605908,
+      986421229688,
+      986124177899,
+      988101557111,
+      987618853999,
+      989192040101,
+      988953324712,
+      990443471047,
+      990632878733,
+      991998770183,
+      994359273049,
+      995604246496,
+      997717748021,
+      998834635539,
+      1000710647731,
+      1001692887894,
+      1003337894408,
+      1004170109144,
+      1005580335328,
+      1006244557952,
+      1007404393620,
+      1007899815254,
+      1008829564307,
+      1009115156980,
+      1009818539418,
+      1009895650920,
+      1010387014760,
+      1010271287142,
+      1010562599490,
+      1010270081444,
+      1010346889067,
+      1009882544398,
+      1009822858756,
+      1009177138497,
+      1009031620761,
+      1008177534503,
+      1007988202298,
+      1006890418709,
+      1006705763081,
+      1005396228923,
+      1005325575791,
+      1003992989451,
+      1003750152849,
+      1002448512696,
+      1002150596083,
+      1000943876985,
+      1000613377443,
+      999557191527,
+      999187875454,
+      998354857501,
+      997930365356,
+      997378434965,
+      996906433114,
+      996629385630,
+      996142247710,
+      996111314091,
+      995635110080,
+      995832515282,
+      995365362290,
+      995759995828,
+      995194387383,
+      995756056034,
+      995403535124,
+      995950675926,
+      995740269982,
+      996232148585,
+      996147493727,
+      996609202196,
+      996630910718,
+      997083618392,
+      997183109398,
+      997631298447,
+      997739850154,
+      998173674472,
+      998312912814,
+      998709949379,
+      998874781938,
+      999208782920,
+      999389857834,
+      999646685876,
+      999842051490,
+      1000052266949,
+      1000243617459,
+      1000399226978,
+      1000602069887,
+      1000711440752,
+      1000928487865,
+      1000999823740,
+      1001239589296,
+      1001270868593,
+      1001507728428,
+      1001505527311,
+      1001690672453,
+      1001657101154,
+      1001795227988,
+      1001732108037,
+      1001827140548,
+      1001737945936,
+      1001784764702,
+      1001675104448,
+      1001694542644,
+      1001562080350,
+      1001547816951,
+      1001398776494,
+      1001361617620,
+      1001200895957,
+      1001152529649,
+      1000984124036,
+      1000893021330,
+      1000729027661,
+      1000654732471,
+      1000487422764,
+      1000402730540,
+      1000239441889,
+      1000154075208,
+      999996788233,
+      999913183311,
+      999764746685,
+      999714550731,
+      999598487421,
+      999509091694,
+      999416834362,
+      999352376504,
+      999294630407,
+      999236042909,
+      999207396834,
+      999144870930,
+      999155982995,
+      999120515195,
+      999138574090,
+      999082947158,
+      999167278173,
+      999128274263,
+      999225178979,
+      999193862229,
+      999290907785,
+      999257501949,
+      999344512107,
+      999366069860,
+      999509308101,
+      999487191485,
+      999591793937,
+      999602608925,
+      999695942568,
+      999722505881,
+      999806675235,
+      999886299571,
+      999957243012,
+      999934672674,
+      1000029096750,
+      1000105272630,
+      1000169922169,
+      1000181882163,
+      1000237694666,
+      1000247797406,
+      1000314850272,
+      1000359306114,
+      1000405734709,
+      1000451126617,
+      1000482582031,
+      1000464214134,
+      1000503961513,
+      1000520028609,
+      1000554389529,
+      1000539514821,
+      1000506226112,
+      1000394514370,
+      1000326630740
+    ],
+    [
+      311802671460,
+      321762885638,
+      579774736346,
+      555882865041,
+      726046113673,
+      667401890072,
+      799728611929,
+      751007561386,
+      854635348366,
+      926658126732,
+      843793499056,
+      708527187540,
+      801305112458,
+      712149498341,
+      760914752447,
+      664441927232,
+      641968629144,
+      570260648896,
+      541458935028,
+      492882641760,
+      505170286822,
+      493982103141,
+      503646973546,
+      493835083329,
+      515485050772,
+      491558620451,
+      520413446414,
+      503375432298,
+      538138204472,
+      539344469841,
+      570808500650,
+      562243270488,
+      631927937689,
+      669569159180,
+      782753206772,
+      874309631652,
+      994331924126,
+      1032646910446,
+      1062805969382,
+      961431126827,
+      997805372905,
+      1077038769413,
+      1119783710982,
+      1060350217113,
+      1011299925387,
+      894850194680,
+      848582019391,
+      782195223332,
+      776527538623,
+      754901805678,
+      786526314465,
+      754558345365,
+      782805631434,
+      768708749075,
+      802848422797,
+      795885921827,
+      837542626993,
+      816537074884,
+      870978531424,
+      851103931228,
+      903976200246,
+      922207328679,
+      1018210674350,
+      1061822107127,
+      1154458999342,
+      1226337682042,
+      1248832174772,
+      1317419769156,
+      1294144328936,
+      1413939181321,
+      1567796066107,
+      1481496572499,
+      1450116496257,
+      1483621222809,
+      1419449436908,
+      1465180963269,
+      1357314068200,
+      1370034389771,
+      1165171390499,
+      1144108668788,
+      872533454107,
+      860902927415,
+      886547806621,
+      874377065223,
+      894215290931,
+      882337378921,
+      898419148009,
+      887709237552,
+      900885854465,
+      891124155565,
+      902042198119,
+      890239823183,
+      903500096385,
+      894782701256,
+      906056238393,
+      899349080067,
+      909686919684,
+      905223409409,
+      916381765009,
+      913599051340,
+      925755594125,
+      924116762318,
+      936270072176,
+      934869919071,
+      947085433810,
+      945895898179,
+      957875520510,
+      957253976857,
+      968811581141,
+      968600020673,
+      979577757435,
+      979330821531,
+      989795976539,
+      989756040949,
+      998740271863,
+      997757028630,
+      1004136108000,
+      1000839985209,
+      1004380020655,
+      1000045633911,
+      1002920812774,
+      1001008993348,
+      1003046564435,
+      999108122549,
+      1000129840804,
+      997579712995,
+      999853567842,
+      1000149623515,
+      1003636753439,
+      1005598592708,
+      1009314239474,
+      1011865701848,
+      1014884276040,
+      1018298213568,
+      1020686219950,
+      1024537390971,
+      1026131548178,
+      1030253265336,
+      1030846101914,
+      1035595687174,
+      1034842785241,
+      1040207144568,
+      1038113259169,
+      1043154933239,
+      1038609054329,
+      1042685945955,
+      1035711689906,
+      1038094081071,
+      1030383204232,
+      1031110118672,
+      1023785234513,
+      1021538434379,
+      1010187636867,
+      1010040350588,
+      999190450240,
+      998202083847,
+      988685208692,
+      986529873778,
+      979472301228,
+      976946797071,
+      974833903807,
+      972772909343,
+      977390756880,
+      975568980640,
+      979661108222,
+      978098018174,
+      981796365171,
+      980491111020,
+      983879824354,
+      982809614640,
+      985953561918,
+      985100820752,
+      988050218453,
+      987471178290,
+      990162892166,
+      989787246436,
+      992264610185,
+      992047091111,
+      994328198635,
+      994216534801,
+      996275579714,
+      996230518253,
+      998037346362,
+      998032105150,
+      999580617216,
+      999610152280,
+      1000892269487,
+      1000951887827,
+      1001966625122,
+      1002042413251,
+      1002795235767,
+      1002877916567,
+      1003375250629,
+      1003465431992,
+      1003714179094,
+      1003807065924,
+      1003838634458,
+      1003957883272,
+      1003832087585,
+      1004036509362,
+      1003819216129,
+      1004136110453,
+      1003842910659,
+      1004216006841,
+      1003865096893,
+      1004346184340,
+      1003961087917,
+      1004518139757,
+      1004067279398,
+      1004631125103,
+      1004079913279,
+      1004610849487,
+      1003952420569,
+      1004434590611,
+      1003683285244,
+      1004093203879,
+      1003261763829,
+      1003585989891,
+      1002692464152,
+      1002920602808,
+      1001994539089,
+      1002109012740,
+      1001175641025,
+      1001157909489,
+      1000252632847,
+      1000108540818,
+      999293972705,
+      999044834830,
+      998381802044,
+      998068438878,
+      997582288488,
+      997242017413,
+      996926270224,
+      996633759284,
+      996590314421,
+      996293666053,
+      996518453207,
+      996239423969,
+      996706342769,
+      996476645695,
+      997122338502,
+      996949973140,
+      997671417770,
+      997548224587,
+      998171253441,
+      998089561853,
+      998624533932,
+      998580003940,
+      999040452902,
+      999024917927,
+      999412044615,
+      999431260952,
+      999746705772,
+      999782930619,
+      1000041596794,
+      1000090771422,
+      1000294172199,
+      1000349400583,
+      1000500137515,
+      1000556221155,
+      1000638270501,
+      1000703048943,
+      1000749131928,
+      1000821799415,
+      1000829189318,
+      1000900854648,
+      1000867270403,
+      1000928153775,
+      1000852706695,
+      1000893826024,
+      1000856566583,
+      1000918979198,
+      1000801232801,
+      1000844633625,
+      1000730557682,
+      1000779133037,
+      1000680570035,
+      1000726551019,
+      1000630249723,
+      1000688102736,
+      1000547434725,
+      1000571332322,
+      1000484770610,
+      1000557869140,
+      1000442788391,
+      1000499431918,
+      1000374830669,
+      1000421431126,
+      1000327504859,
+      1000363886510,
+      1000171989794,
+      1000266976525,
+      1000137364977,
+      1000211377587,
+      1000078298186,
+      1000114426989,
+      999967207325,
+      999965561619,
+      999842185464,
+      999771758854,
+      999915374824,
+      999857327957,
+      999720724829,
+      999643347789,
+      999608060340,
+      999571542265,
+      999582565180,
+      999562647865,
+      999507011457,
+      999538167415,
+      999624530530,
+      999564171264,
+      999611071725,
+      999600666146,
+      999536375551,
+      999506444106,
+      999506038949,
+      999516535166,
+      999530171625,
+      999635228472
+    ],
+    [
+      195049019441,
+      228971783558,
+      258136172897,
+      275643828330,
+      294453057561,
+      318540656340,
+      355909534537,
+      404821668761,
+      478306846367,
+      570682189202,
+      532645517810,
+      564615592364,
+      586735983445,
+      595355242040,
+      598450705092,
+      592335220693,
+      595825126046,
+      605906773064,
+      629505346331,
+      665613931121,
+      683039139531,
+      756430295247,
+      814779361467,
+      858611355490,
+      891655872933,
+      915211705601,
+      932901834280,
+      950380264922,
+      973654213232,
+      1001375738802,
+      769966824319,
+      766408553393,
+      750183203213,
+      734471287432,
+      712304551882,
+      695098019765,
+      696372699947,
+      719726158603,
+      758424599238,
+      825601033291,
+      832803666827,
+      790823582897,
+      765742850654,
+      765952420870,
+      777636609448,
+      818841578509,
+      854813454446,
+      895946676052,
+      927282244205,
+      957379029091,
+      1210466803854,
+      1209343499581,
+      1213493730665,
+      1222148197160,
+      1231543710681,
+      1233748364347,
+      1227198417360,
+      1208086246446,
+      1174609198493,
+      1123625031531,
+      1129799161271,
+      1113920371653,
+      1113485583434,
+      1122984635233,
+      1142560463359,
+      1168646948671,
+      1189029085836,
+      1200817476742,
+      1202131328204,
+      1190064390739,
+      1252518986913,
+      1177435653585,
+      1128092810583,
+      1093372568331,
+      1077978180016,
+      1066612068599,
+      1068922192448,
+      1063414504371,
+      1054697940547,
+      1031789325433,
+      852091229886,
+      862530902132,
+      868516284034,
+      878369258097,
+      883775448546,
+      893436872671,
+      898507660719,
+      907808018878,
+      912070726332,
+      920380097926,
+      922913942880,
+      929123128001,
+      932669885084,
+      938235395561,
+      941318231376,
+      946807712040,
+      949890223663,
+      955669437002,
+      958741384822,
+      964412469201,
+      966971384978,
+      971881191013,
+      974067437540,
+      977265788326,
+      978048200225,
+      980231313504,
+      980207665046,
+      981856188078,
+      981389721551,
+      982642333529,
+      981585766959,
+      982178396215,
+      986876318246,
+      987572973511,
+      992794017035,
+      993900835447,
+      999806202002,
+      1001370135951,
+      1007390731173,
+      1008409317392,
+      1013613118620,
+      1012979525013,
+      1018134271890,
+      1018533524218,
+      1024443414859,
+      1024846813186,
+      1030611837760,
+      1029995403268,
+      1035005273132,
+      1033345184922,
+      1037693697353,
+      1035239266811,
+      1033374242135,
+      1030886495618,
+      1028871101345,
+      1026104735815,
+      1023804211245,
+      1020914141163,
+      1018720279529,
+      1016236371614,
+      1014824223004,
+      1013552066281,
+      1011950499607,
+      1011042943393,
+      1009411925552,
+      1008244079040,
+      1006082921167,
+      1004234149177,
+      1001509587228,
+      999320229509,
+      996494014033,
+      994552228600,
+      990096066538,
+      989982274810,
+      986647705538,
+      987398717151,
+      984365343057,
+      985418948662,
+      982252133853,
+      983470115760,
+      980444396658,
+      982265706238,
+      983653214871,
+      985259006862,
+      986531489140,
+      987931005182,
+      989100066472,
+      990292937614,
+      991364446134,
+      992354513180,
+      993346161281,
+      994153297890,
+      995106373273,
+      995778339281,
+      996666594217,
+      997216065235,
+      998049513524,
+      998475316032,
+      999252664852,
+      999544504823,
+      1000264137206,
+      1000421377723,
+      1001095299372,
+      1001133732283,
+      1001769964506,
+      1001729328546,
+      1002361953427,
+      1002265554116,
+      1002914446131,
+      1002774218176,
+      1003452084681,
+      1003276963066,
+      1003997639488,
+      1003803196465,
+      1004424724252,
+      1004208024105,
+      1004714907242,
+      1004465105768,
+      1004837221888,
+      1004542257476,
+      1004773004977,
+      1004445283753,
+      1004551942077,
+      1004232399471,
+      1004212760376,
+      1003875588145,
+      1003707553461,
+      1003352307077,
+      1003035977618,
+      1002687722740,
+      1002236986794,
+      1001922860070,
+      1001353041832,
+      1001092783593,
+      1000555153677,
+      1000350665074,
+      999849621037,
+      999709227277,
+      999252981003,
+      999181139745,
+      998770821642,
+      998759624653,
+      998372601095,
+      998392494366,
+      998035615818,
+      998078958434,
+      997753457506,
+      997827852442,
+      997547450310,
+      997670797132,
+      997452644075,
+      997632836337,
+      997477535622,
+      997710082354,
+      997662036216,
+      997902850285,
+      997936880606,
+      998163954374,
+      998274186594,
+      998479986406,
+      998669740030,
+      998848446270,
+      999123865993,
+      999259567102,
+      999504342802,
+      999601996469,
+      999821378805,
+      999886117334,
+      1000084215124,
+      1000119360415,
+      1000292100122,
+      1000309406448,
+      1000465914691,
+      1000457864770,
+      1000594767322,
+      1000568394973,
+      1000688483832,
+      1000647368904,
+      1000752561948,
+      1000700881525,
+      1000769417929,
+      1000708788088,
+      1000786436351,
+      1000724964050,
+      1000780699916,
+      1000714083126,
+      1000752722815,
+      1000681920431,
+      1000698593765,
+      1000626507471,
+      1000677770277,
+      1000612450244,
+      1000585253327,
+      1000522121282,
+      1000505664458,
+      1000452090606,
+      1000422446689,
+      1000371614890,
+      1000322395893,
+      1000283828688,
+      1000209224171,
+      1000172630353,
+      1000106464627,
+      1000097515805,
+      1000014463931,
+      1000005196642,
+      999917111345,
+      999919918568,
+      999840832582,
+      999854138072,
+      999728262493,
+      999786886139,
+      999752762873,
+      999781691254,
+      999721865303,
+      999746888410,
+      999692007978,
+      999721325022,
+      999684308668,
+      999708691727,
+      999792245383,
+      999841249915,
+      999765231318,
+      999783456291,
+      999776675216,
+      999822413527,
+      999813284438,
+      999880020365,
+      999865359673,
+      999937114708,
+      1000008026001,
+      1000003900825,
+      999939066530,
+      999941375819,
+      999964123708,
+      999971855770,
+      1000002994914,
+      999979700649,
+      999994224452,
+      999978712157
+    ],
+    [
+      14647600603,
+      21955921761,
+      33548795590,
+      51896593862,
+      79582298308,
+      134264879495,
+      200512035167,
+      277136509807,
+      372093320114,
+      474439475541,
+      665746284725,
+      738635450529,
+      820463770537,
+      832369464830,
+      935225151864,
+      877283171937,
+      889602052353,
+      773519092701,
+      617971254453,
+      510297392318,
+      1016573555960,
+      846958596279,
+      772549027206,
+      734012147564,
+      676695274075,
+      735093654758,
+      710380428726,
+      788813004657,
+      765150428127,
+      746850421105,
+      778313323974,
+      768156512120,
+      886456445475,
+      852597228516,
+      1013208052319,
+      901307293785,
+      924550620713,
+      773509996203,
+      630607007231,
+      628637959502,
+      652756525922,
+      637970166144,
+      833285935388,
+      970977877848,
+      1004449124812,
+      1109240880936,
+      1002166270042,
+      1032382550681,
+      961984505954,
+      969508263431,
+      983400326226,
+      999712701121,
+      1069669272382,
+      987696049978,
+      1061070059437,
+      995621590140,
+      1104866286017,
+      1135680577002,
+      1266609027867,
+      1433512604070,
+      974371748461,
+      1086198310679,
+      1281291357614,
+      1407225305174,
+      1439020803228,
+      1511410824184,
+      1450892942616,
+      1454947132274,
+      1411898136984,
+      1353248374121,
+      1194861407934,
+      1102729741552,
+      1034358923838,
+      963729998500,
+      920702892189,
+      868883559085,
+      862649950680,
+      845411020729,
+      854824756289,
+      848011617373,
+      854239048790,
+      854563965221,
+      875228728479,
+      875379247443,
+      896270391692,
+      895965117602,
+      916685413100,
+      915005094455,
+      934586971789,
+      930948774938,
+      948644568565,
+      942357358255,
+      955715276216,
+      947448797694,
+      959094912481,
+      950324747287,
+      959692199463,
+      952152797828,
+      961449423439,
+      956623289125,
+      970031366384,
+      967774281866,
+      968872273696,
+      970796824544,
+      973782011479,
+      976716727782,
+      981208530339,
+      982756718070,
+      987977921344,
+      987605655928,
+      993547987793,
+      993623883269,
+      998927223462,
+      999258723199,
+      1001737843307,
+      1002923629999,
+      1001452224848,
+      1005465520333,
+      1003378935170,
+      1011266473875,
+      1012697855520,
+      1020831733437,
+      1021693516398,
+      1030396836033,
+      1026400010263,
+      1031879682393,
+      1026948126380,
+      1029947052887,
+      1027567718217,
+      1029886686355,
+      1029206661248,
+      1031395526815,
+      1030349887157,
+      1032187082635,
+      1029367334822,
+      1033298886790,
+      1028574824095,
+      1034238031055,
+      1026664815312,
+      1031697222155,
+      1020669929820,
+      1021659137275,
+      1021822668978,
+      1020040411508,
+      1015333563977,
+      1010359751763,
+      1004741615984,
+      997835246283,
+      993589139610,
+      986409919847,
+      983135567536,
+      977244075901,
+      977845885752,
+      974110001544,
+      976435760127,
+      974371788494,
+      977830852469,
+      977009996869,
+      980711145151,
+      980300444357,
+      983859042156,
+      983608164127,
+      987099720297,
+      986834294526,
+      989896440159,
+      989620517115,
+      992236803631,
+      991961593177,
+      994125037655,
+      993884927690,
+      995612858931,
+      995457714800,
+      996786315783,
+      996784509130,
+      997812220397,
+      998017103171,
+      998779282128,
+      999208593468,
+      999755513362,
+      1000384003155,
+      1000711686195,
+      1001476750014,
+      1001477769878,
+      1002318442422,
+      1002291803469,
+      1003105466871,
+      1003003261363,
+      1003764032902,
+      1003546885376,
+      1004287915892,
+      1003934546121,
+      1004703737644,
+      1004193207325,
+      1004979558779,
+      1004323807864,
+      1005121435622,
+      1004387831318,
+      1005175493675,
+      1004461102870,
+      1005167704079,
+      1004486744784,
+      1005014099639,
+      1004281208716,
+      1004618096922,
+      1003846245090,
+      1003973723259,
+      1003283252340,
+      1003276382546,
+      1002692076106,
+      1002609696039,
+      1002072935007,
+      1001929854719,
+      1001395919866,
+      1001194595788,
+      1000674311870,
+      1000422076015,
+      999960537147,
+      999603577664,
+      999249403178,
+      998740901557,
+      998566501494,
+      997920759043,
+      998017510554,
+      997331504431,
+      997425807601,
+      996767642989,
+      996981933716,
+      996431638640,
+      996792575166,
+      996400413919,
+      996872299449,
+      996652543546,
+      997219334693,
+      997140527262,
+      997706051211,
+      997717474674,
+      998237935878,
+      998300076440,
+      998745271876,
+      998829611966,
+      999201919664,
+      999296662757,
+      999577197576,
+      999681161635,
+      999880073883,
+      999995705145,
+      1000120159815,
+      1000247960544,
+      1000304376095,
+      1000441772225,
+      1000452559067,
+      1000600910483,
+      1000563376561,
+      1000720971123,
+      1000650326453,
+      1000813752215,
+      1000718695405,
+      1000881123217,
+      1000763696205,
+      1000917443407,
+      1000771101643,
+      1000923057707,
+      1000788991215,
+      1000917592093,
+      1000768053791,
+      1000878049808,
+      1000723304886,
+      1000816354421,
+      1000666490247,
+      1000735219432,
+      1000579190252,
+      1000648503181,
+      1000516489914,
+      1000548080697,
+      1000420360744,
+      1000435939102,
+      1000338252431,
+      1000326909962,
+      1000258645532,
+      1000220933059,
+      1000105006576,
+      1000074802876,
+      1000041662996,
+      999973815612,
+      999957775172,
+      999878046032,
+      999878401796,
+      999782062244,
+      999777087746,
+      999687220733,
+      999799514515,
+      999697151928,
+      999686555284,
+      999614174187,
+      999680798225,
+      999612970116,
+      999712339426,
+      999640897831,
+      999737198950,
+      999632573875,
+      999679243282,
+      999676729119,
+      999758585741,
+      999749244420,
+      999793605616,
+      999794012032,
+      999869310625,
+      999869134347,
+      999978052729,
+      999962515317,
+      999857688849,
+      999995573575,
+      1000098635843,
+      1000102460216,
+      1000126095851,
+      1000116514875,
+      1000098586662,
+      1000088166230,
+      1000024665125,
+      1000063633103
+    ],
+    [
+      152115998025,
+      162733646794,
+      230975783749,
+      268260664032,
+      342583213293,
+      441379436132,
+      529589822007,
+      609167435684,
+      690879536505,
+      491469188671,
+      535089251003,
+      676269569024,
+      708091765067,
+      655140161341,
+      646722313381,
+      536376798892,
+      519746269082,
+      430976248820,
+      426986735884,
+      412950277885,
+      436475837435,
+      458184872814,
+      529402694761,
+      693737309125,
+      832973828356,
+      1109380756729,
+      1238982681120,
+      1416682156847,
+      1432153440175,
+      711430241807,
+      564858348278,
+      637473194520,
+      684935089251,
+      692334574964,
+      783816264970,
+      800592132282,
+      861179245203,
+      798620370953,
+      773112774407,
+      671918694025,
+      694855635247,
+      786302257010,
+      858894846099,
+      915557051698,
+      902354834849,
+      880679267090,
+      833965536181,
+      820939248973,
+      815890947211,
+      735508393742,
+      928031648679,
+      1656996070841,
+      1691903062948,
+      1536226404647,
+      1454634745732,
+      1189448899933,
+      1092701595132,
+      928849774108,
+      895922125883,
+      870056550907,
+      883410105732,
+      892994435475,
+      934296287563,
+      1021073839982,
+      1076464425835,
+      1189745024941,
+      1238518609824,
+      1298561032545,
+      1307518544860,
+      1171401151747,
+      1167693510024,
+      1373749077035,
+      1329813843475,
+      1260043429743,
+      1206306421539,
+      1113103446648,
+      1070052484256,
+      1035098366187,
+      995345075422,
+      985919047298,
+      857493235222,
+      858448119278,
+      875126496259,
+      875840359632,
+      891228916720,
+      891026652407,
+      904941751014,
+      902264591994,
+      914322912568,
+      909594146227,
+      919912803501,
+      920045039700,
+      929530332066,
+      926139539936,
+      935067598992,
+      932916712986,
+      942279054692,
+      942831874120,
+      952843567665,
+      955628662975,
+      965990202497,
+      969194329179,
+      979226189037,
+      981965859399,
+      990466837768,
+      989165020308,
+      994397143157,
+      986154881486,
+      988279196724,
+      975402351526,
+      977198173176,
+      982002704165,
+      987504004078,
+      990614601631,
+      995066933612,
+      998069781245,
+      1000346631198,
+      1003005619328,
+      1003826525913,
+      1008116854477,
+      1009596044192,
+      1016519782313,
+      1017461677315,
+      1022273418830,
+      1021424696684,
+      1024941017203,
+      1024401688312,
+      1028547710148,
+      1029162872232,
+      1033739300929,
+      1034493170222,
+      1041180626097,
+      1037140158500,
+      1025786833025,
+      1020775571816,
+      1013031506203,
+      1009935665136,
+      1008625307026,
+      1007869980200,
+      1010620724042,
+      1010669292911,
+      1014134490534,
+      1013850183277,
+      1017161313208,
+      1015836899762,
+      1017061231256,
+      1014318685498,
+      1012742677315,
+      1008713115630,
+      1005599622132,
+      1001246193066,
+      1001452372396,
+      997082316723,
+      992147489751,
+      988766867116,
+      985453144441,
+      983331478814,
+      982263723113,
+      981165162159,
+      980944282745,
+      980812972848,
+      980822689062,
+      983895839967,
+      983881862414,
+      986614739645,
+      986582530375,
+      988998928400,
+      988971072034,
+      991099951467,
+      991138300144,
+      993018729958,
+      993176121291,
+      994845585236,
+      995003761054,
+      996477896323,
+      996724799183,
+      998012617262,
+      998319364491,
+      999405338443,
+      999705654145,
+      1000567962776,
+      1000806097870,
+      1001431248430,
+      1001595186996,
+      1001985250538,
+      1002084598524,
+      1002271991767,
+      1002406321743,
+      1002467636921,
+      1002812061091,
+      1002822208986,
+      1003496030088,
+      1003461327624,
+      1004032037838,
+      1003859220481,
+      1004366544225,
+      1004078613291,
+      1004523513147,
+      1004172018088,
+      1004560723307,
+      1004179840380,
+      1004472174028,
+      1004045358180,
+      1004171288739,
+      1003710498409,
+      1003718585692,
+      1003268165027,
+      1003188432245,
+      1002741160555,
+      1002557629939,
+      1002082376020,
+      1001778887652,
+      1001273358232,
+      1000796307039,
+      1000379489531,
+      1000174126903,
+      999872515662,
+      999855927240,
+      999624378318,
+      999639993951,
+      999421117983,
+      999367666919,
+      999142391269,
+      999001353264,
+      998777497218,
+      998550498263,
+      998353961051,
+      998090716598,
+      997957121894,
+      997724434615,
+      997689417216,
+      997531311143,
+      997602692996,
+      997433695400,
+      997615630167,
+      997565246667,
+      997836243017,
+      997867169267,
+      998196913800,
+      998256410954,
+      998614203818,
+      998684395740,
+      999055426025,
+      999123515380,
+      999424941252,
+      999496858798,
+      999738766075,
+      999817107876,
+      1000005760970,
+      1000081667364,
+      1000215533539,
+      1000292851438,
+      1000392759451,
+      1000473967398,
+      1000536869072,
+      1000613271002,
+      1000640579513,
+      1000709537394,
+      1000705466261,
+      1000760022866,
+      1000706000602,
+      1000762439347,
+      1000719441085,
+      1000770419713,
+      1000700438328,
+      1000740526171,
+      1000658674185,
+      1000701546605,
+      1000609869558,
+      1000682424590,
+      1000603329127,
+      1000609570885,
+      1000508546766,
+      1000535544347,
+      1000449243725,
+      1000462208467,
+      1000387771236,
+      1000381958814,
+      1000315212633,
+      1000265482473,
+      1000182222507,
+      1000204201238,
+      1000154929620,
+      1000094217861,
+      1000040725491,
+      999972481509,
+      999947622449,
+      999901547439,
+      999898990186,
+      999933967745,
+      999847213843,
+      999775462004,
+      999771033156,
+      999779957482,
+      999783544525,
+      999763042409,
+      999780574375,
+      999787398282,
+      999808472734,
+      999795661487,
+      999796727197,
+      999758184423,
+      999792971325,
+      999796952715,
+      999824146857,
+      999829453207,
+      999856667130,
+      999855335411,
+      999866603882,
+      999778458126,
+      999870888067,
+      999985042795,
+      999970154980,
+      999909789417,
+      999935034383,
+      999932290559,
+      999973175118,
+      999981943260,
+      999973392775,
+      1000036689534
+    ],
+    [
+      273647509110,
+      269997201474,
+      303192470263,
+      305075891557,
+      328126344864,
+      336162306393,
+      359363295920,
+      369063608272,
+      395444837508,
+      411039597500,
+      490750198622,
+      505020835936,
+      549687600635,
+      572308690560,
+      612188300886,
+      638343539876,
+      665732364168,
+      679419609782,
+      697818022037,
+      708500263970,
+      759385467978,
+      747669985910,
+      748507046247,
+      752209208529,
+      766905257121,
+      759875322303,
+      778846780511,
+      773651896576,
+      788087983482,
+      791243794646,
+      874300943664,
+      845805562049,
+      847415916716,
+      832300563837,
+      840745169027,
+      828349170614,
+      835216897356,
+      822392312407,
+      820424066291,
+      792978491349,
+      812661613841,
+      841076975470,
+      882952710063,
+      897778101081,
+      931693051282,
+      946770406733,
+      979745177303,
+      998296699498,
+      1038889952904,
+      1071997736017,
+      1030082477112,
+      1032287957733,
+      1057584925254,
+      1068326154882,
+      1089245580828,
+      1102266386264,
+      1127616927619,
+      1130138453600,
+      1169960947404,
+      1188256070542,
+      1177753547754,
+      1173841326590,
+      1195103033975,
+      1187746057816,
+      1199864056988,
+      1179201215357,
+      1178134240410,
+      1159923333980,
+      1152925970248,
+      1142253713871,
+      1098044532133,
+      1085391512718,
+      1092746923462,
+      1085429448926,
+      1095568897311,
+      1089531807872,
+      1099498852242,
+      1099416595658,
+      1098657991965,
+      1104198717784,
+      856123624332,
+      858151264400,
+      870685320692,
+      872854798859,
+      884872444751,
+      887048985459,
+      898790833886,
+      900820739575,
+      912276155403,
+      914114185982,
+      925195529283,
+      926689494861,
+      936055893168,
+      937230279262,
+      945714304986,
+      946352293907,
+      954051658198,
+      954051981982,
+      961259242735,
+      960917445715,
+      967844402333,
+      967227218246,
+      973056171581,
+      972716068503,
+      978669675412,
+      978228565181,
+      983963566295,
+      983687125563,
+      989091235204,
+      988937450890,
+      994114912505,
+      993878607947,
+      997110663416,
+      997580406237,
+      1000853059475,
+      1001712199181,
+      1004855631921,
+      1006046059726,
+      1009096571622,
+      1010637468920,
+      1013813281818,
+      1016077739110,
+      1018840543831,
+      1020451352512,
+      1022236641414,
+      1023516974918,
+      1024499236167,
+      1025434505783,
+      1025616848885,
+      1026111383901,
+      1025284752778,
+      1024964788647,
+      1025164235108,
+      1024780944563,
+      1024353292853,
+      1023691679186,
+      1022730256842,
+      1021726823841,
+      1020107412526,
+      1019015524579,
+      1016361230590,
+      1014785140661,
+      1012326499530,
+      1010808653105,
+      1007757349139,
+      1006385726070,
+      1002955674004,
+      1002066211691,
+      998577130783,
+      998120491704,
+      994719857080,
+      994518859356,
+      992137294408,
+      992247616653,
+      989622671551,
+      989918674804,
+      986974720432,
+      987428644057,
+      984162020259,
+      984629431256,
+      981303366348,
+      981645210687,
+      984432863640,
+      984732536665,
+      987276428354,
+      987529318346,
+      989836262870,
+      990041019996,
+      992112037234,
+      992271077235,
+      994107328167,
+      994224451599,
+      995829557107,
+      995912138836,
+      997323218300,
+      997378379460,
+      998612720063,
+      998653187052,
+      999726037030,
+      999767352772,
+      1000686394634,
+      1000737345691,
+      1001506585412,
+      1001574103997,
+      1002216935714,
+      1002294479708,
+      1002804654626,
+      1002894921035,
+      1003274427419,
+      1003373598126,
+      1003628374718,
+      1003733724346,
+      1003865131100,
+      1003978821996,
+      1004033110205,
+      1004137804319,
+      1004112177681,
+      1004197780877,
+      1004093232283,
+      1004150962325,
+      1003967631864,
+      1003988472306,
+      1003721412116,
+      1003686430754,
+      1003343768091,
+      1003267762789,
+      1002872211940,
+      1002762412370,
+      1002332982021,
+      1002197251791,
+      1001750316916,
+      1001600807337,
+      1001164511349,
+      1001019585971,
+      1000567181271,
+      1000427936788,
+      999974802404,
+      999848348272,
+      999408006518,
+      999303263310,
+      998895415531,
+      998815235040,
+      998460873059,
+      998417998722,
+      998116644907,
+      998110922657,
+      997878163607,
+      997907072866,
+      997752595944,
+      997804562248,
+      997737421929,
+      997802143108,
+      997813126530,
+      997884015456,
+      997954262286,
+      998024428955,
+      998161417871,
+      998225758253,
+      998438373447,
+      998492796078,
+      998788015985,
+      998834410340,
+      999226351395,
+      999263053411,
+      999591040102,
+      999620625867,
+      999893084414,
+      999916871969,
+      1000140322822,
+      1000157532856,
+      1000330555072,
+      1000350088852,
+      1000486042620,
+      1000495755179,
+      1000596665084,
+      1000604124319,
+      1000675582490,
+      1000681616017,
+      1000726314858,
+      1000730388443,
+      1000725683966,
+      1000737499579,
+      1000743301878,
+      1000746531006,
+      1000721768912,
+      1000721747863,
+      1000681347134,
+      1000676103374,
+      1000615377547,
+      1000606726811,
+      1000573213874,
+      1000566223187,
+      1000476686162,
+      1000464777410,
+      1000399699253,
+      1000388388296,
+      1000326741988,
+      1000306751023,
+      1000234940139,
+      1000211122373,
+      1000131967257,
+      1000124167266,
+      1000053817518,
+      1000047663081,
+      999977783527,
+      999966689132,
+      999910835799,
+      999901113528,
+      999864671983,
+      999860788520,
+      999720634072,
+      999793002456,
+      999797377401,
+      999810103021,
+      999769539747,
+      999761669671,
+      999735802776,
+      999731084137,
+      999723702425,
+      999724220147,
+      999847799430,
+      999854348727,
+      999761662012,
+      999771730333,
+      999808695586,
+      999834955929,
+      999858240672,
+      999894232682,
+      999862855868,
+      999883504819,
+      1000084354479,
+      1000101648561,
+      999936862264,
+      999932130976,
+      999948231027,
+      999971428175,
+      999982033309,
+      999986002177,
+      999961855097,
+      999963795048
+    ],
+    [
+      350619307288,
+      323774240417,
+      479044734382,
+      449910379434,
+      531236723649,
+      499903857120,
+      556946342521,
+      535555048273,
+      588732021317,
+      615858582003,
+      702041471691,
+      627263964995,
+      692147823589,
+      675762019087,
+      728350403406,
+      690204593503,
+      684080714642,
+      629659128497,
+      593846969033,
+      532896519969,
+      577762069544,
+      572758349875,
+      584461361995,
+      584672093906,
+      610060314132,
+      588014200870,
+      618932664194,
+      602807274458,
+      635442904969,
+      647320784608,
+      706454271552,
+      675176587053,
+      728005155828,
+      756725706840,
+      847948777228,
+      921432699301,
+      993582729694,
+      1000384153744,
+      981811150637,
+      855602866521,
+      887136483640,
+      996213895764,
+      1079106933397,
+      1057731553908,
+      1050170053726,
+      959740687334,
+      930636320628,
+      881991558512,
+      889233449483,
+      900152802592,
+      899792319936,
+      867532303017,
+      892844687250,
+      888184661906,
+      915073629122,
+      916769244213,
+      949225999779,
+      928701877265,
+      975362767352,
+      959665177427,
+      973208034557,
+      1014588623067,
+      1110042940780,
+      1147290011097,
+      1215595412364,
+      1238451693525,
+      1248437382730,
+      1250514672116,
+      1246832414297,
+      1309223169684,
+      1281995025495,
+      1243363519991,
+      1247131018522,
+      1256586319780,
+      1255156268047,
+      1275572669791,
+      1247789665673,
+      1267246848386,
+      1160943053821,
+      1179268661208,
+      866187592784,
+      858125049965,
+      879075211536,
+      871481615689,
+      889075591926,
+      882020180546,
+      898021620126,
+      891572518645,
+      906548156713,
+      900471766205,
+      914491915539,
+      907586959082,
+      919804054057,
+      914594519179,
+      925495252701,
+      920564869650,
+      930424633648,
+      926324982941,
+      936584963119,
+      933743507046,
+      945153964298,
+      943763896069,
+      954338501903,
+      953038605945,
+      963585055194,
+      962247778405,
+      972423196005,
+      971603224704,
+      981259930597,
+      980821995042,
+      989904031480,
+      989158747544,
+      996990020912,
+      997006829245,
+      1003712769347,
+      1003010822278,
+      1007604042229,
+      1005048433751,
+      1007954582342,
+      1005167067302,
+      1008610027673,
+      1008903736841,
+      1011643404668,
+      1009219404281,
+      1009957211734,
+      1008007918265,
+      1008953980553,
+      1009215735983,
+      1010912573776,
+      1012395656763,
+      1013954167338,
+      1015202034147,
+      1016808496324,
+      1018893390719,
+      1019907485704,
+      1022160580471,
+      1022527669485,
+      1024795073404,
+      1024359962884,
+      1027196788936,
+      1025585379458,
+      1028884642223,
+      1026893010637,
+      1029239896446,
+      1024812884167,
+      1026287503592,
+      1020043415823,
+      1020983881393,
+      1014334039194,
+      1015245218447,
+      1008521346606,
+      1007897555342,
+      1001685596220,
+      1002011336709,
+      995549953393,
+      995647367650,
+      989060447174,
+      988649894108,
+      982593550525,
+      981687155506,
+      978138962527,
+      976753775946,
+      980937435793,
+      979719158920,
+      983483585411,
+      982424648467,
+      985843210391,
+      984934148502,
+      988038077298,
+      987267429847,
+      990074402011,
+      989436553966,
+      991963146128,
+      991481887106,
+      993766273030,
+      993403138166,
+      995472301070,
+      995223182176,
+      997097832015,
+      996944681879,
+      998609242337,
+      998523341862,
+      999944647193,
+      999891232854,
+      1001083999670,
+      1001061550157,
+      1002020736320,
+      1002030731321,
+      1002759549135,
+      1002789669883,
+      1003296605563,
+      1003338140639,
+      1003630716745,
+      1003691329966,
+      1003795989309,
+      1003857330597,
+      1003797989865,
+      1003877946934,
+      1003703187676,
+      1003848648748,
+      1003597220432,
+      1003815414125,
+      1003472245039,
+      1003689089393,
+      1003269352366,
+      1003552362872,
+      1003104047632,
+      1003442870776,
+      1002960392975,
+      1003301179300,
+      1002761688330,
+      1003076740398,
+      1002485037555,
+      1002777813705,
+      1002130443858,
+      1002378511182,
+      1001688865370,
+      1001886699059,
+      1001170247267,
+      1001315826859,
+      1000595780858,
+      1000673623432,
+      999972932097,
+      999969760125,
+      999300998901,
+      999239646540,
+      998664511499,
+      998565387611,
+      998129504835,
+      998005041494,
+      997728275054,
+      997577249266,
+      997457115433,
+      997318157461,
+      997348330367,
+      997197847858,
+      997388835489,
+      997232599923,
+      997591051697,
+      997442170877,
+      997955437177,
+      997827872208,
+      998448453900,
+      998351463099,
+      998880539574,
+      998810365312,
+      999257821147,
+      999212424995,
+      999588730306,
+      999562381562,
+      999866293974,
+      999867700806,
+      1000112914373,
+      1000122073469,
+      1000315457805,
+      1000335798765,
+      1000482462359,
+      1000508788225,
+      1000611429581,
+      1000639647932,
+      1000669763000,
+      1000716336056,
+      1000738578578,
+      1000780712235,
+      1000764760188,
+      1000805844981,
+      1000758608643,
+      1000792184303,
+      1000710786110,
+      1000736141909,
+      1000686724886,
+      1000724646524,
+      1000609050383,
+      1000634736026,
+      1000531232150,
+      1000563606807,
+      1000474636227,
+      1000500744244,
+      1000406483901,
+      1000435187390,
+      1000323298967,
+      1000342410752,
+      1000244964698,
+      1000300726698,
+      1000204072100,
+      1000242122671,
+      1000150005592,
+      1000177392060,
+      1000109011842,
+      1000129090293,
+      999938723181,
+      1000063925626,
+      999993627231,
+      1000044528789,
+      999948334278,
+      999954576522,
+      999870630640,
+      999862175717,
+      999806898517,
+      999776790078,
+      999894687128,
+      999861658236,
+      999743567407,
+      999705399755,
+      999703811804,
+      999706936333,
+      999722911508,
+      999730630301,
+      999674453489,
+      999686677695,
+      999893689503,
+      999854702996,
+      999736571256,
+      999739453198,
+      999721341632,
+      999720866796,
+      999720849342,
+      999738424925,
+      999711736354,
+      999756662027
+    ],
+    [
+      141781713625,
+      147796509071,
+      171971676516,
+      185198702508,
+      210231063517,
+      232853991645,
+      262339745855,
+      280527044650,
+      309642154920,
+      324493690546,
+      401661507420,
+      413916992554,
+      437362256167,
+      445060998654,
+      464518749431,
+      478802026095,
+      502762622424,
+      520966725417,
+      547004959981,
+      564300124799,
+      768831421063,
+      887116928839,
+      992822681768,
+      1136246913146,
+      1260981718041,
+      1327814745420,
+      1331124807862,
+      1214575315488,
+      1056707274737,
+      853503631144,
+      859013851439,
+      778944758819,
+      748575933240,
+      712182203579,
+      707877356083,
+      691122083528,
+      697152665659,
+      686875001885,
+      684727842093,
+      666401692202,
+      683271008012,
+      701637558151,
+      737998767486,
+      749033014011,
+      777974677790,
+      796181250361,
+      836289472858,
+      875499502744,
+      943433784314,
+      1029301331162,
+      1062917088089,
+      1279145952922,
+      1480927162305,
+      1618821666149,
+      1664386413523,
+      1620675028321,
+      1542835776260,
+      1417854617328,
+      1354455818653,
+      1248531789942,
+      1079608922929,
+      1071594633600,
+      1076290731945,
+      1066712271248,
+      1073004213782,
+      1066749972859,
+      1077215470585,
+      1077196787898,
+      1083350398008,
+      1078468307795,
+      1029123827020,
+      1021152444489,
+      1017899096351,
+      1005938029201,
+      1001495404947,
+      984234044254,
+      983507867766,
+      974880183072,
+      974388632324,
+      972607247876,
+      850950141147,
+      855138327366,
+      868679141204,
+      872821489170,
+      886096218918,
+      890011245677,
+      902991988898,
+      906439367578,
+      919007712427,
+      922086736147,
+      934240555484,
+      937025067908,
+      947554690424,
+      950102567257,
+      960309429705,
+      962728252302,
+      972703561173,
+      974825675098,
+      984451250084,
+      986171258710,
+      995383961159,
+      996712428504,
+      1001044232594,
+      999448502276,
+      1001245557353,
+      996025324786,
+      994750849076,
+      987732463993,
+      986346174657,
+      982067436565,
+      984591032724,
+      985282557134,
+      987732170069,
+      990441708964,
+      993711579802,
+      997398139791,
+      1000857265997,
+      1005054686755,
+      1008449532483,
+      1013008901754,
+      1016542287972,
+      1021673087372,
+      1024872758725,
+      1029672715691,
+      1032043628260,
+      1036687468228,
+      1038393957539,
+      1042698154093,
+      1043444167899,
+      1046875012258,
+      1045941975271,
+      1047310325814,
+      1045510311933,
+      1041508524128,
+      1034621718130,
+      1027075586348,
+      1018879687171,
+      1012238930052,
+      1005784120484,
+      1002101367224,
+      997072026516,
+      995944156697,
+      995008863474,
+      994053101155,
+      992977150942,
+      992236931401,
+      990976909177,
+      990374361005,
+      988821323569,
+      988204233942,
+      986459504115,
+      985949335122,
+      985393635248,
+      985070140088,
+      984581970764,
+      984549510282,
+      984160243015,
+      984558190614,
+      984177340205,
+      984800866890,
+      984424385307,
+      985108520639,
+      987761427438,
+      988357931219,
+      990738567917,
+      991246391683,
+      993354586862,
+      993777185615,
+      995613467303,
+      995960357609,
+      997528257722,
+      997806890856,
+      999110115814,
+      999326040887,
+      1000398554196,
+      1000556083313,
+      1001400177690,
+      1001501039837,
+      1002116768554,
+      1002166941464,
+      1002557044107,
+      1002565446329,
+      1002735214442,
+      1002710574098,
+      1002776328660,
+      1002790969429,
+      1002813573080,
+      1002959078757,
+      1003014117462,
+      1003338560070,
+      1003429815751,
+      1003869249561,
+      1003899640987,
+      1004332668232,
+      1004302808007,
+      1004678875891,
+      1004566858936,
+      1004860045094,
+      1004659032086,
+      1004854493476,
+      1004563412590,
+      1004649845182,
+      1004263469141,
+      1004223809078,
+      1003747910461,
+      1003587216922,
+      1003040542246,
+      1002759820054,
+      1002157285171,
+      1001761843712,
+      1001124626546,
+      1000634409769,
+      1000005084938,
+      999468723078,
+      998869173882,
+      998419508470,
+      997977565076,
+      997705116454,
+      997457121121,
+      997343709380,
+      997252727008,
+      997228946258,
+      997260222960,
+      997264074328,
+      997319860412,
+      997347845016,
+      997432220574,
+      997479804718,
+      997597344518,
+      997661433922,
+      997821687975,
+      997902682027,
+      998108034880,
+      998203484077,
+      998427544003,
+      998533865247,
+      998775478862,
+      998885316847,
+      999141188140,
+      999242694948,
+      999511564080,
+      999601345824,
+      999887802864,
+      999961757009,
+      1000187143163,
+      1000247745987,
+      1000418190177,
+      1000466979699,
+      1000588328422,
+      1000626027909,
+      1000705364672,
+      1000740997018,
+      1000784256521,
+      1000809321541,
+      1000821113471,
+      1000840071407,
+      1000825019840,
+      1000838662508,
+      1000800700977,
+      1000811036595,
+      1000744387513,
+      1000759041052,
+      1000702961197,
+      1000714923926,
+      1000647409604,
+      1000661765032,
+      1000594315983,
+      1000609190730,
+      1000536386055,
+      1000544943899,
+      1000478996840,
+      1000484009271,
+      1000402371832,
+      1000393076976,
+      1000320963887,
+      1000301944879,
+      1000233232075,
+      1000200770272,
+      1000131149450,
+      1000090283695,
+      1000005607033,
+      999966514634,
+      999906844008,
+      999861818996,
+      999802577561,
+      999755029384,
+      999717494033,
+      999677692409,
+      999656153130,
+      999614412557,
+      999548395987,
+      999554769565,
+      999562844115,
+      999557662677,
+      999579251510,
+      999578286563,
+      999615077053,
+      999617906670,
+      999655915913,
+      999667711850,
+      999784543354,
+      999822165872,
+      999823052467,
+      999846399942,
+      999905521892,
+      999933966101,
+      999991535583,
+      1000030402931,
+      1000057219731,
+      1000090205497,
+      1000171660994,
+      1000188672619,
+      1000127392192,
+      1000134802480,
+      1000154000572,
+      1000188651490,
+      1000205194504,
+      1000224089807,
+      1000183017444,
+      1000151134409
+    ]
+  ],
+  "eta_num": 34717,
+  "eta_den": 500000000000000000,
+  "target_num": 942881,
+  "target_den": 1000000,
+  "a_num": 4115932823347987227434653323892149,
+  "a_den": 3125000000000000000000000000000000,
+  "b_num": 6749870497482795806020646413227807947570779,
+  "b_den": 10000000000000000000000000000000000000000000,
+  "gamma_decimal": "0.942880922007654527230191060497048547410450393541477892477105",
+  "least_positive_q": 317,
+  "least_positive_num": 1729604192871682222771,
+  "least_positive_den": 62500000000000000000000000000000000000000
+}
+
+
+================================================================================
+FILE: certificates/m80/verify_fraction.py
+================================================================================
+#!/usr/bin/env python3
+"""Exact standard-library verifier for the complete m=80 certificate.
+
+Every proof-relevant quantity is a fractions.Fraction.  Explicit exceptions are
+used instead of ``assert`` so that ``python -O`` cannot disable a check.
+"""
+from __future__ import annotations
+
+from decimal import Decimal, getcontext
+from fractions import Fraction
+import json
+from pathlib import Path
+from typing import Any
+
+DATA_PATH = Path(__file__).with_name("certificate.json")
+
+
+class CertificateError(RuntimeError):
+    pass
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise CertificateError(message)
+
+
+def load() -> dict[str, Any]:
+    return json.loads(DATA_PATH.read_text(encoding="utf-8"))
+
+
+def verify(data: dict[str, Any]) -> dict[str, Any]:
+    R = int(data["R"])
+    m = int(data["m"])
+    L = int(data["L"])
+    n = L * m
+
+    wd = int(data["weights_den"])
+    wn = [int(x) for x in data["weights_num"]]
+    kd = int(data["kernel_den"])
+    kn = [[int(x) for x in row] for row in data["kernels_num"]]
+    bd = int(data["boundary_den"])
+    bn = [[int(x) for x in row] for row in data["boundary_num"]]
+    eta = Fraction(int(data["eta_num"]), int(data["eta_den"]))
+    target = Fraction(int(data["target_num"]), int(data["target_den"]))
+
+    require(R > 0 and m > 0 and L > 0, "R, m and L must be positive")
+    require(len(wn) == R, "wrong number of mixing weights")
+    require(all(x > 0 for x in wn), "mixing weights must be positive")
+    require(sum(wn) == wd, "mixing weights do not sum to one")
+    weights = [Fraction(x, wd) for x in wn]
+
+    require(len(kn) == R, "wrong number of kernels")
+    kernels: list[list[Fraction]] = []
+    for r, row in enumerate(kn):
+        require(len(row) == m, f"kernel {r} has length {len(row)}, expected {m}")
+        require(all(x >= 0 for x in row), f"kernel {r} has a negative entry")
+        require(sum(row) == kd, f"kernel {r} is not normalized")
+        require(row == row[::-1], f"kernel {r} is not symmetric")
+        kernels.append([Fraction(x, kd) for x in row])
+
+    require(len(bn) == R, "wrong number of boundary vectors")
+    for r, row in enumerate(bn):
+        require(len(row) == n, f"boundary vector {r} has wrong length")
+
+    def boundary_value(r: int, j: int) -> Fraction:
+        if j >= n:
+            return Fraction(1)
+        return Fraction(bn[r][j], bd) + eta
+
+    slacks: list[Fraction] = []
+    for q in range(n + 1):
+        cover = sum(
+            weights[r] * kernels[r][i] * boundary_value(r, q + i)
+            for r in range(R)
+            for i in range(m)
+        )
+        slack = cover - 1
+        require(slack >= 0, f"covering constraint q={q} fails by {-slack}")
+        slacks.append(slack)
+
+    a = m * sum(
+        weights[r] * sum(p * p for p in kernels[r])
+        for r in range(R)
+    )
+    rho = sum(
+        weights[r] * sum(boundary_value(r, j) ** 2 for j in range(n))
+        for r in range(R)
+    )
+    b = 1 + 2 * (rho / m - L)
+
+    expected_a = Fraction(int(data["a_num"]), int(data["a_den"]))
+    expected_b = Fraction(int(data["b_num"]), int(data["b_den"]))
+    require(a == expected_a, f"computed a differs from stored a: {a} != {expected_a}")
+    require(b == expected_b, f"computed b differs from stored b: {b} != {expected_b}")
+    require(b > 0, "b must be positive")
+
+    square_gap = target * target - a * b
+    require(square_gap > 0, "target^2 is not strictly larger than a*b")
+
+    positive = [(s, q) for q, s in enumerate(slacks) if s > 0]
+    require(bool(positive), "certificate has no positive covering slack")
+    least_slack, least_q = min(positive)
+    equality_q = [q for q, s in enumerate(slacks) if s == 0]
+    expected_least = Fraction(
+        int(data["least_positive_num"]), int(data["least_positive_den"])
+    )
+    require(least_q == int(data["least_positive_q"]), "least-slack index mismatch")
+    require(least_slack == expected_least, "least-slack value mismatch")
+
+    return {
+        "R": R,
+        "m": m,
+        "L": L,
+        "n": n,
+        "eta": eta,
+        "target": target,
+        "a": a,
+        "b": b,
+        "square_gap": square_gap,
+        "least_slack": least_slack,
+        "least_q": least_q,
+        "equality_q": equality_q,
+    }
+
+
+def main() -> None:
+    result = verify(load())
+    getcontext().prec = 70
+    a: Fraction = result["a"]
+    b: Fraction = result["b"]
+    gamma = (
+        Decimal(a.numerator)
+        * Decimal(b.numerator)
+        / (Decimal(a.denominator) * Decimal(b.denominator))
+    ).sqrt()
+
+    print("PASS: all exact Fraction checks completed.")
+    print(f"R={result['R']}, m={result['m']}, L={result['L']}")
+    print(f"covering constraints checked: {result['n'] + 1}")
+    print(f"eta = {result['eta']}")
+    print(f"a = {a}")
+    print(f"b = {b}")
+    print(f"display-only sqrt(a*b) = {gamma}")
+    print(
+        "exact comparison: a*b < "
+        f"({result['target'].numerator}/{result['target'].denominator})^2"
+    )
+    print(f"target^2-a*b = {result['square_gap']}")
+    print(f"least positive slack: q={result['least_q']}, {result['least_slack']}")
+    print(f"equality constraints: {result['equality_q']}")
+
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+FILE: certificates/m80/verify_sympy.py
+================================================================================
+#!/usr/bin/env python3
+"""Independent SymPy-rational verifier for the m=80 certificate."""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+import sympy as sp
+
+
+class CertificateError(RuntimeError):
+    pass
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise CertificateError(message)
+
+
+path = Path(__file__).with_name("certificate.json")
+d = json.loads(path.read_text(encoding="utf-8"))
+R, m, L = map(int, (d["R"], d["m"], d["L"]))
+n = m * L
+Q = sp.Rational
+weights = [Q(int(x), int(d["weights_den"])) for x in d["weights_num"]]
+kernels = [
+    [Q(int(x), int(d["kernel_den"])) for x in row]
+    for row in d["kernels_num"]
+]
+eta = Q(int(d["eta_num"]), int(d["eta_den"]))
+boundaries = [
+    [Q(int(x), int(d["boundary_den"])) + eta for x in row]
+    for row in d["boundary_num"]
+]
+target = Q(int(d["target_num"]), int(d["target_den"]))
+
+require(sum(weights) == 1, "mixing weights do not sum to one")
+require(all(x > 0 for x in weights), "a mixing weight is not positive")
+for r, row in enumerate(kernels):
+    require(sum(row) == 1, f"kernel {r} is not normalized")
+    require(row == list(reversed(row)), f"kernel {r} is not symmetric")
+    require(all(x >= 0 for x in row), f"kernel {r} has a negative entry")
+
+slacks: list[sp.Rational] = []
+for q in range(n + 1):
+    c = sp.S.Zero
+    for r in range(R):
+        for i in range(m):
+            w = sp.S.One if q + i >= n else boundaries[r][q + i]
+            c += weights[r] * kernels[r][i] * w
+    slack = sp.factor(c - 1)
+    require(bool(slack >= 0), f"covering constraint q={q} fails")
+    slacks.append(slack)
+
+a = sp.factor(m * sum(
+    weights[r] * sum(x * x for x in kernels[r]) for r in range(R)
+))
+rho = sum(weights[r] * sum(x * x for x in boundaries[r]) for r in range(R))
+b = sp.factor(1 + 2 * (rho / m - L))
+require(a == Q(int(d["a_num"]), int(d["a_den"])), "a mismatch")
+require(b == Q(int(d["b_num"]), int(d["b_den"])), "b mismatch")
+gap = sp.factor(target**2 - a * b)
+require(bool(gap > 0), "target^2-a*b is not positive")
+
+print("PASS: independent SymPy rational checks completed.")
+print("a =", a)
+print("b =", b)
+print("target^2-a*b =", gap)
+print("equality q =", [i for i, s in enumerate(slacks) if s == 0])
+
+
+================================================================================
+FILE: checkers/check_C_derivation_symbolic.py
+================================================================================
+#!/usr/bin/env python3
+"""Exact algebra checks for the C(r), D(r), and renewal derivation.
+
+The analytic differentiation under the integral is proved in the note.  This
+script checks the resulting functional algebra exactly.
+"""
+from __future__ import annotations
+
+import sympy as sp
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise RuntimeError(message)
+
+r = sp.symbols("r", real=True)
+
+
+# The regularization/initial-segment term reduces exactly to 4(1-r).
+z = sp.exp(r) - 2
+extra = sp.simplify(2 - 2*z + 2*sp.integrate(sp.exp(sp.Symbol("t")) - 2, (sp.Symbol("t"), 0, r)))
+require(sp.simplify(extra - 4*(1-r)) == 0, "the 4(1-r) term is missing")
+
+# Check that C=2r satisfies C'=C(r)-C(1-r)+4(1-r).
+C_r = 2 * r
+C_1mr = 2 * (1 - r)
+functional_residual = sp.expand(sp.diff(C_r, r) - (C_r - C_1mr + 4 * (1 - r)))
+require(functional_residual == 0, "C=2r does not solve the functional equation")
+
+# If F is affine, F'=F(r)-F(1-r) forces zero slope.
+a, b = sp.symbols("a b")
+F = a * r + b
+stationarity = sp.Poly(sp.expand(sp.diff(F, r) - (F - F.subs(r, 1 - r))), r)
+require(stationarity.coeff_monomial(r) == -2 * a, "unexpected affine coefficient")
+require(stationarity.coeff_monomial(1) == 2 * a, "unexpected affine constant")
+
+# Renewal substitution: C=2r-D and C=int C gives D=1+int D.
+D, I0, I1 = sp.symbols("D I0 I1")
+# I0 = integral D, I1 = integral vD.
+renewal = sp.simplify(D - (1 + I0))
+require(renewal.subs(I0, D - 1) == 0, "renewal substitution fails")
+
+# Weighted identity: if I0=D-1 and I0-I1=r-1, then D-I1=r.
+weighted = sp.simplify((D - I1 - r).subs(I1, I0 - (r - 1)).subs(I0, D - 1))
+require(weighted == 0, "weighted renewal identity fails")
+
+# C + integral(vD) = r, since C=2r-D and I1=D-r.
+C_plus = sp.simplify((2 * r - D) + (D - r) - r)
+require(C_plus == 0, "C cancellation fails")
+
+# C(0) from the exact z moments.
+z0_at_0 = -1
+Z1 = -sp.Rational(1, 3)
+Z2 = sp.Rational(1, 3)
+C0 = sp.simplify(2 + z0_at_0 + 4 * Z1 + Z2)
+require(C0 == 0, f"C(0) is {C0}")
+
+print("PASS: exact C/D renewal algebra.")
+print("functional residual =", functional_residual)
+print("C(0) =", C0)
+
+
+================================================================================
+FILE: checkers/check_carry_partition.py
+================================================================================
+#!/usr/bin/env python3
+"""Exact block/carry decomposition on the 10-mark planar ruler."""
+from __future__ import annotations
+
+from itertools import combinations
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise RuntimeError(message)
+
+A = (0, 1, 6, 10, 23, 26, 34, 41, 53, 55)
+B = 10
+representations: dict[int, tuple[int, int]] = {}
+for i, j in combinations(range(len(A)), 2):
+    d = A[j] - A[i]
+    require(d not in representations, f"repeated difference {d}")
+    representations[d] = (i, j)
+
+# The cut gap is 36, hence every 1,...,35 is represented.
+for t in range(1, 36):
+    require(t in representations, f"initial difference {t} is missing")
+    i, j = representations[t]
+    qi, si = divmod(A[i], B)
+    qj, sj = divmod(A[j], B)
+    d, r = divmod(t, B)
+    if sj >= si:
+        require(d == qj - qi and r == sj - si,
+                f"non-carry decomposition fails for t={t}")
+    else:
+        require(d == qj - qi - 1 and r == B + sj - si,
+                f"carry decomposition fails for t={t}")
+
+print("PASS: exact quotient/residue carry partition for differences 1,...,35.")
+
+
+================================================================================
+FILE: checkers/check_cyclic_defect.py
+================================================================================
+#!/usr/bin/env python3
+"""Exact checks for the almost-perfect cyclic completion of interval rulers."""
+from __future__ import annotations
+
+from collections import Counter
+from itertools import combinations
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise RuntimeError(message)
+
+
+def verify_ruler(A: tuple[int, ...]) -> dict[str, int]:
+    k = len(A)
+    D = A[-1] - A[0]
+    M = k * k - k + 1
+    require(D < M, f"diameter {D} is not below M={M}")
+
+    positive: dict[int, tuple[int, int]] = {}
+    for i, j in combinations(range(k), 2):
+        d = A[j] - A[i]
+        require(d not in positive, f"repeated positive difference {d}")
+        positive[d] = (i, j)
+
+    nu = Counter()
+    for i in range(k):
+        for j in range(k):
+            if i != j:
+                nu[(A[j] - A[i]) % M] += 1
+
+    require(all(nu[r] <= 2 for r in range(1, M)), "a cyclic multiplicity exceeds two")
+    holes = [r for r in range(1, M) if nu[r] == 0]
+    duplicates = [r for r in range(1, M) if nu[r] == 2]
+    require(len(holes) == len(duplicates), "holes and duplicates do not balance")
+
+    g = M - D
+    require(all(nu[r] <= 1 for r in range(1, g)), "a protected small residue is duplicated")
+
+    # Unordered residue-pair form.
+    pair_counts = []
+    for r in range(1, (M + 1) // 2):
+        pair_counts.append(int(r in positive) + int(M - r in positive))
+    require(pair_counts.count(0) == pair_counts.count(2),
+            "empty and double unordered residue pairs do not balance")
+
+    return {
+        "k": k,
+        "D": D,
+        "M": M,
+        "g": g,
+        "holes": len(holes),
+        "duplicates": len(duplicates),
+    }
+
+examples = [
+    (0, 1, 4, 10),
+    (0, 1, 6, 10, 23, 26, 34, 41, 53, 55),
+]
+for A in examples:
+    result = verify_ruler(A)
+    print("PASS:", A)
+    print(result)
+
+
+================================================================================
+FILE: checkers/check_decomposition19_symbolic.py
+================================================================================
+#!/usr/bin/env python3
+"""Exact formal-algebra checks for the square-and-potential decomposition.
+
+Symbols stand for already justified integrals.  This checks coefficients and
+cancellations; it is deliberately not presented as a proof of convergence.
+"""
+from __future__ import annotations
+
+import sympy as sp
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise RuntimeError(message)
+
+H = sp.symbols("H", real=True)
+F2, KF2, FF_D, G2, GKF = sp.symbols("F2 KF2 FF_D G2 GKF", real=True)
+linear_f = sp.symbols("linear_f", real=True)
+
+# Completing the square in g.
+complete = sp.expand((G2 - GKF) - ((sp.Symbol("S")) + KF2 / 4))
+# Replace S by ||g-Kf/2||^2 = G2-GKF+KF2/4.
+S_value = G2 - GKF + KF2 / 4
+require(sp.simplify((G2 - GKF) - (S_value - KF2 / 4)) == 0,
+        "square completion coefficient fails")
+
+# K identity substitution: 1/2 F2 - 1/4 KF2 = 1/4 F2 + 1/4 FF_D.
+left = F2 / 2 - KF2 / 4
+right = F2 / 4 + FF_D / 4
+require(sp.simplify(left.subs(KF2, F2 - FF_D) - right) == 0,
+        "K-identity substitution fails")
+
+# Expansion of ||p-p0||^2/4 with ||p0||^2=4/3 and <p,p0>=2 int_0^1 u p.
+P2, UP01 = sp.symbols("P2 UP01", real=True)
+expanded_norm = P2 / 4 + sp.Rational(1, 3) - UP01
+require(sp.expand(expanded_norm - (P2 / 4 + sp.Rational(1, 3) - UP01)) == 0,
+        "norm expansion bookkeeping fails")
+
+# Cross-D cancellation for u>1:
+# -(p*C) - p*(u-C) = -p*u.
+p, C, u = sp.symbols("p C u", real=True)
+require(sp.expand(-p * C - p * (u - C) + p * u) == 0,
+        "cross-D cancellation fails")
+
+# Constant H-1 + 1/3 = H-2/3.
+require(sp.simplify(H - 1 + sp.Rational(1, 3) - (H - sp.Rational(2, 3))) == 0,
+        "constant reduction fails")
+
+# Endpoint pointwise squares.
+x, q = sp.symbols("x q", nonnegative=True)
+low = sp.expand(x * q + q**2 / 4 - q + (1 - x) ** 2)
+require(sp.factor(low - (q / 2 - (1 - x)) ** 2) == 0,
+        "low-x pointwise square fails")
+high = sp.expand(x * q + q**2 / 4 - q)
+require(sp.factor(high - ((x - 1) * q + q**2 / 4)) == 0,
+        "high-x pointwise identity fails")
+require(sp.integrate((1 - x) ** 2, (x, 0, 1)) == sp.Rational(1, 3),
+        "endpoint integral mismatch")
+
+print("PASS: exact decomposition (19) coefficient algebra.")
+print("endpoint square (0<=x<=1):", sp.factor(low))
+print("endpoint integral =", sp.Rational(1, 3))
+
+
+================================================================================
+FILE: checkers/check_delay_profile_symbolic.py
+================================================================================
+#!/usr/bin/env python3
+"""Exact symbolic checks for the delay profile.
+
+This script verifies identities that reduce to finite symbolic integration or
+formal series algebra.  It does not replace the contour-shift or Fubini
+arguments in the proof note.
+"""
+from __future__ import annotations
+
+import sympy as sp
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise RuntimeError(message)
+
+u, t, x, s = sp.symbols("u t x s", real=True)
+
+# Active covering at x=0.
+active = sp.simplify(sp.integrate(2 * u * (sp.exp(u) - 1), (u, 0, 1)))
+require(active == 1, f"active integral is {active}, expected 1")
+
+# Laplace transform has removable value -1/3 at zero.
+Z = ((2 - s) * sp.exp(s) - (2 + s)) / (s * ((s - 1) * sp.exp(s) + 1))
+series = sp.series(Z, s, 0, 4)
+require(sp.limit(Z, s, 0) == -sp.Rational(1, 3), "Z(0) mismatch")
+
+# First integral.
+z_initial = sp.exp(t) - 2
+first = sp.simplify(sp.integrate((1 - t**2) * z_initial, (t, 0, 1)))
+require(first == -sp.Rational(1, 3), f"first integral is {first}")
+
+# Adjoint identity on 0<t<1.
+y = sp.symbols("y", nonnegative=True)
+adjoint_initial = sp.simplify(
+    y + sp.integrate((y - x) * (sp.exp(x) - 2), (x, 0, y))
+)
+expected = sp.exp(y) - 1 - y**2
+require(sp.simplify(adjoint_initial - expected) == 0, "initial adjoint identity fails")
+
+# Positive dual stationarity on 0<t<1.
+dual_initial = sp.simplify(
+    2 * y + sp.integrate(2 * (y - x) * sp.exp(x), (x, 0, y))
+)
+require(sp.simplify(dual_initial - 2 * (sp.exp(y) - 1)) == 0,
+        "initial positive-dual identity fails")
+
+# Candidate constants.
+A0 = sp.integrate((2 * u) ** 2, (u, 0, 1))
+Z1 = -sp.Rational(1, 3)
+Z2 = sp.Rational(1, 3)
+B0 = sp.simplify(1 + 2 * Z1 + Z2)
+require(A0 == sp.Rational(4, 3), "A0 mismatch")
+require(B0 == sp.Rational(2, 3), "B0 mismatch")
+require(sp.simplify(A0 * B0 - sp.Rational(8, 9)) == 0, "product mismatch")
+require(sp.simplify(A0 / 2 + B0 - sp.Rational(4, 3)) == 0,
+        "linear objective mismatch")
+
+print("PASS: exact delay-profile symbolic identities.")
+print("Laplace series at zero:", series)
+print("A0 =", A0)
+print("B0 =", B0)
+print("A0*B0 =", A0 * B0)
+
+
+================================================================================
+FILE: checkers/check_factorial_moment_plateau.py
+================================================================================
+#!/usr/bin/env python3
+"""Exact two-level pseudodistribution for the raw factorial-moment plateau."""
+from __future__ import annotations
+
+from fractions import Fraction
+from math import prod
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise RuntimeError(message)
+
+for m in range(2, 25):
+    p0 = Fraction(1, m + 1)
+    p1 = Fraction(m, m + 1)
+    height = m + 1
+    mean = p1 * height
+    second_falling = p1 * height * (height - 1)
+    require(mean == m, f"mean mismatch at m={m}")
+    require(second_falling == m * m, f"second factorial mismatch at m={m}")
+    for r in range(2, min(10, m + 1) + 1):
+        falling = prod(range(height - r + 1, height + 1))
+        moment = p1 * falling
+        require(moment <= m**r, f"factorial moment exceeds m^r at m={m}, r={r}")
+    for r in range(2, 6):
+        centered = p0 * m ** (2 * r) + p1
+        require(centered >= Fraction(m ** (2 * r), m + 1), "centered lower bound fails")
+
+print("PASS: exact two-level factorial-moment plateau for m=2,...,24.")
+print("P(X=0)=1/(m+1), P(X=m+1)=m/(m+1).")
+
+
+================================================================================
+FILE: checkers/check_pairwise_pseudo.py
+================================================================================
+#!/usr/bin/env python3
+"""Exact checks for the two pairwise saturation pseudomodels."""
+from __future__ import annotations
+
+import sympy as sp
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise RuntimeError(message)
+
+lam, t = sp.symbols("lam t", positive=True)
+ell = sp.symbols("ell", integer=True, positive=True)
+fell = lam**ell * t ** (ell - 1) * sp.exp(-lam * t) / sp.factorial(ell - 1)
+renewal_sum = sp.simplify(sp.summation(fell, (ell, 1, sp.oo)))
+require(renewal_sum == lam, "gamma-density renewal sum is not flat")
+
+beta0 = 4 * sp.sqrt(2) / 3
+require(sp.simplify(4 - beta0**2) == sp.Rational(4, 9), "beta algebra fails")
+
+# A unique directed labeling can retain all pairwise labels and violate the
+# gradient/cocycle identity on one triangle.
+for M in (7, 13, 21, 31):
+    require((1 + 2) % M != 4 % M, f"triangle example accidentally closes mod {M}")
+
+# Fourier spectrum of nu(0)=k, nu(r)=1 for r!=0 follows from
+# sum_{r=0}^{M-1} chi(r)=0 for nontrivial characters:
+# k + sum_{r!=0}chi(r)=k-1.
+k = sp.symbols("k", integer=True, positive=True)
+nontrivial_value = sp.simplify(k - 1)
+trivial_value = sp.simplify(k + (k**2 - k))
+require(trivial_value == k**2, "trivial Fourier value mismatch")
+
+print("PASS: pairwise pseudoconfiguration identities.")
+print("sum_l f_l(t) =", renewal_sum)
+print("nontrivial cyclic spectral value =", nontrivial_value)
+
+
+================================================================================
+FILE: checkers/check_rank_aggregate_plateau.py
+================================================================================
+#!/usr/bin/env python3
+"""Exact SymPy checks for the central-gap rank-aggregate plateau formulas."""
+from __future__ import annotations
+
+import sympy as sp
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise RuntimeError(message)
+
+k, L, x, n, q = sp.symbols("k L x n q", positive=True, integer=True)
+P = L * (L + 1) / 2
+M = k * L - P
+rho = sp.simplify(M * (M + 1) / (L * (L + 1)))
+formula = k**2 / x + k * x - k - k / x - x**2 / 4 + x / 4 + sp.Rational(1, 2)
+require(sp.simplify((k**2 - rho).subs(L, x - 1) - formula) == 0,
+        "short-rank formula mismatch")
+
+Pq = q * (q + 1) / 2
+c = n**2 - Pq
+Mlong = n * (2 * n - 1) - Pq
+require(sp.simplify(c - (n**2 - q * (q + 1) / 2)) == 0, "long coefficient mismatch")
+require(sp.simplify(Mlong - (n * (2 * n - 1) - q * (q + 1) / 2)) == 0,
+        "long band count mismatch")
+
+y = sp.symbols("y", nonnegative=True)
+poly = sp.factor(6 * (1 - y) - (2 - y) ** 2)
+require(poly == -(y**2 + 2 * y - 2), "normalized polynomial mismatch")
+require(sp.simplify(poly.subs(y, sp.Rational(1, 2))) == sp.Rational(3, 4),
+        "endpoint bound mismatch")
+
+print("PASS: exact rank-aggregate plateau algebra.")
+print("k^2-rho(k,L) =", formula)
+
+
+================================================================================
+FILE: checkers/check_spectral_selector.py
+================================================================================
+#!/usr/bin/env python3
+"""Exact polynomial check of the spectral-selector factorization."""
+from __future__ import annotations
+
+import sympy as sp
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise RuntimeError(message)
+
+z = sp.symbols("z")
+A = (0, 1, 6, 10, 23, 26, 34, 41, 53, 55)
+k = len(A)
+M = k * k - k + 1
+D = A[-1]
+g = M - D
+P = sum(z**a for a in A)
+Psharp = sp.expand(z**D * P.subs(z, z**-1))
+Q = sp.Poly(sp.expand(P * Psharp - (k - 1) * z**D), z)
+
+coeffs = [int(Q.nth(i)) for i in range(2 * D + 1)]
+require(all(c in (0, 1) for c in coeffs), "Q is not binary")
+require(sum(coeffs) == M, "Q does not have M ones")
+
+S = sp.Poly(sum(z**r for r in range(M)), z)
+quotient, remainder = sp.div(Q, S)
+require(remainder.is_zero, "S_M does not divide Q")
+
+# Recover selector E from Q = S + (z^M-1)E.
+Qexpr = Q.as_expr()
+selector_num = sp.Poly(sp.expand(Qexpr - S.as_expr()), z)
+E_poly, rem2 = sp.div(selector_num, sp.Poly(z**M - 1, z))
+require(rem2.is_zero, "selector division has a remainder")
+Ecoeff = [int(E_poly.nth(i)) for i in range(max(0, E_poly.degree()) + 1)]
+require(all(c in (0, 1) for c in Ecoeff), "E is not binary")
+
+L = M - 2 * g + 1
+Efull = [int(E_poly.nth(i)) for i in range(L)]
+require(all(int(E_poly.nth(i)) == 0 for i in range(L, M)), "E exceeds predicted support")
+require(all(Efull[r] + Efull[L - 1 - r] == 1 for r in range(L)),
+        "selector is not complement-palindromic")
+require(sum(Efull) * 2 == L, "selector is not balanced")
+
+R_expected = sp.Poly(1 + (z - 1) * E_poly.as_expr(), z)
+require(sp.Poly(quotient, z) == R_expected, "quotient formula fails")
+
+print("PASS: exact spectral-selector factorization.")
+print(f"M={M}, D={D}, g={g}, selector length L={L}, selector weight={sum(Efull)}")
+print("selector bits =", "".join(map(str, Efull)))
+
+
+================================================================================
+FILE: checkers/check_translate_incidence.py
+================================================================================
+#!/usr/bin/env python3
+"""Exact finite checks for translate-incidence moment identities."""
+from __future__ import annotations
+
+from math import comb
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise RuntimeError(message)
+
+
+def verify_difference_set(D: tuple[int, ...], M: int) -> None:
+    k = len(D)
+    counts = [0] * M
+    for a in D:
+        for b in D:
+            if a != b:
+                counts[(a - b) % M] += 1
+    require(counts[0] == 0, "zero directed difference occurred")
+    require(all(counts[r] == 1 for r in range(1, M)),
+            f"not a planar difference set: counts={counts}")
+    require(M == k * k - k + 1, "parameter equation fails")
+
+
+def window_counts(D: tuple[int, ...], M: int, H: int) -> list[int]:
+    I = set(range(H))
+    return [sum(1 for d in D if (d + s) % M in I) for s in range(M)]
+
+
+def verify_moments(D: tuple[int, ...], M: int, H: int) -> None:
+    X = window_counts(D, M, H)
+    k = len(D)
+    require(sum(X) == k * H, "first moment identity fails")
+    require(sum(comb(x, 2) for x in X) == comb(H, 2),
+            "second factorial moment identity fails")
+    for r in range(3, min(H, k) + 1):
+        require(sum(comb(x, r) for x in X) <= comb(H, r),
+                f"higher factorial moment bound fails at r={r}")
+
+
+def max_zero_run(D: tuple[int, ...], M: int) -> int:
+    bits = [1 if x in D else 0 for x in range(M)]
+    doubled = bits + bits
+    best = cur = 0
+    for b in doubled:
+        if b == 0:
+            cur += 1
+            best = max(best, cur)
+        else:
+            cur = 0
+    return min(best, M - len(D))
+
+examples = [
+    ((0, 1, 3, 9), 13),
+    ((0, 1, 6, 10, 23, 26, 34, 41, 53, 55), 91),
+]
+for D, M in examples:
+    verify_difference_set(D, M)
+    for H in range(1, min(12, M) + 1):
+        verify_moments(D, M, H)
+    Z = max_zero_run(D, M)
+    print(f"PASS: (M,k)=({M},{len(D)}), maximum zero run={Z}, gap distance={Z+1}")
+
+
+================================================================================
+FILE: proofs/carry_partition.md
+================================================================================
+# Exact quotient/residue carry partition
+
+Fix an integer block size `B`. Write every mark as
+
+\[
+a_i=Bq_i+s_i,
+\qquad0\le s_i<B.
+\]
+
+For `i<j`, put `t=a_j-a_i` and write `t=Bd+r`, `0<=r<B`. Then exactly one of
+the following holds:
+
+1. **No carry:** `s_j>=s_i`, and
+   \[
+   d=q_j-q_i,
+   \qquad r=s_j-s_i.
+   \]
+
+2. **Borrow/carry:** `s_j<s_i`, and
+   \[
+   d=q_j-q_i-1,
+   \qquad r=B+s_j-s_i.
+   \]
+
+Thus full coverage of a block of consecutive differences imposes a
+complementarity relation between non-carry edges at row lag `d` and carry
+edges at row lag `d+1`.
+
+Counting only how many edges fall in each carry class recovers an inversion
+balance and reaches the same square-root critical scale as pairwise smoothing.
+The information that remains unused is **residue-level complementarity**: for
+every individual `r`, exactly one compatible endpoint pair must realize
+`Bd+r`. The checker verifies this partition on the 10-mark planar ruler whose
+initial differences are exactly `1,...,35`.
+
+This route stopped at the **carry-count plateau**. A further step must couple
+residue values and shared vertices, not only inversion totals.
+
+
+================================================================================
+FILE: proofs/continuum_barrier.md
+================================================================================
+# Exact continuum barrier for one-sided kernel-majorant smoothing
+
+## Theorem
+
+Let `lambda_1,...,lambda_R>0` sum to one. For every `r`, let `p_r>=0` belong
+to `L^2([0,H])`, with `int p_r=1`, and let `w_r-1` belong to
+`L^1(0,infinity) cap L^2(0,infinity)`. Assume
+
+\[
+\sum_{r=1}^R\lambda_r\int_0^H p_r(u)w_r(x+u)\,du\ge1
+\quad\text{for almost every }x\ge0.
+\tag{1}
+\]
+
+Define
+
+\[
+A=\sum_r\lambda_r\int_0^Hp_r(u)^2\,du,
+\qquad
+B=H+\sum_r\lambda_r\int_0^\infty(w_r(t)^2-1)\,dt.
+\tag{2}
+\]
+
+Then
+
+\[
+\boxed{\frac A2+B\ge\frac43.}
+\tag{3}
+\]
+
+Consequently
+
+\[
+\boxed{AB\ge\frac89}
+\qquad\text{and}\qquad
+\boxed{\inf\sqrt{AB}=\frac{2\sqrt2}{3}.}
+\tag{4}
+\]
+
+The infimum is attained in the scalar system
+
+\[
+p_0(u)=2u\,1_{[0,1]}(u)
+\]
+
+with the delay profile `w_0` of `delay_profile.md`.
+
+## Proof
+
+The delay-profile note proves:
+
+1. `T_{p_0}w_0=1`;
+2. `int p_0^2=4/3`;
+3. `int(w_0^2-1)=-1/3`;
+4. the positive dual equation `T_{p_0}^*mu_0=2w_0`;
+5. a pointwise nonnegative renewal slack `D`;
+6. the weighted renewal identity required to cancel the cross term.
+
+The complete square-and-potential calculation in `decomposition19.md` proves
+(3), including the vector-valued case.
+
+It remains to pass from (3) to the product. Dilate any admissible system by
+`s>0`:
+
+\[
+p_{r,s}(u)=s^{-1}p_r(u/s),
+\qquad
+w_{r,s}(t)=w_r(t/s),
+\qquad
+H_s=sH.
+\]
+
+The covering inequality is preserved, while
+
+\[
+A_s=A/s,
+\qquad B_s=sB.
+\]
+
+Applying (3) for every `s>0`,
+
+\[
+\frac{A}{2s}+sB\ge\frac43.
+\]
+
+This also forces `B>0`. Minimizing the left side at
+`s=sqrt(A/(2B))` gives
+
+\[
+\sqrt{2AB}\ge\frac43,
+\]
+
+which is (4). For the displayed scalar system,
+
+\[
+A_0=\frac43,
+\qquad B_0=1-\frac13=\frac23,
+\]
+
+so `A_0B_0=8/9`. `QED`
+
+## Euler--Lagrange closure
+
+At the extremizer, every inequality in the proof is active:
+
+\[
+T_{p_0}w_0=1,
+\qquad
+T_{p_0}^*\mu_0=2w_0,
+\]
+
+\[
+\Psi(u)=p_0(u)-\frac13\quad(0<u<1),
+\]
+
+and scale stationarity is
+
+\[
+A_0=2B_0.
+\]
+
+The endpoint square is active because, after the substitution `x=1-u`,
+
+\[
+p_0(1-x)=2(1-x)
+\quad(0<x<1).
+\]
+
+Thus the theorem is a dual optimum certificate, not only a lower bound.
+
+## Relation to finite Sidon bounds
+
+The causal covering lemma in `vector_covering_lemma.md` discretizes any
+piecewise smooth admissible system. The theorem therefore proves that no
+one-sided pairwise-autocorrelation kernel-majorant system in this class can
+produce a coefficient below
+
+\[
+2\sqrt2/3
+\]
+
+in front of `N^{1/4}`. The theorem does not say that every possible Sidon-set
+argument has this barrier. It names the information discarded by this class:
+pairwise autocorrelation retains lag occupancy but not the common
+vertex-incidence/gradient realization of all lags.
+
+
+================================================================================
+FILE: proofs/cyclic_defect_reduction.md
+================================================================================
+# Almost-perfect cyclic completion of an interval ruler
+
+Let
+
+\[
+A=\{0=a_0<a_1<\cdots<a_{k-1}=D\}
+\]
+
+be a `k`-mark Golomb ruler. Put
+
+\[
+M=k^2-k+1.
+\]
+
+This note concerns the nontrivial range `D<M`; if `D>=M`, the desired main
+term lower bound for the diameter already holds.
+
+## 1. Exact residue multiplicities
+
+Let
+
+\[
+\Delta=\{a_j-a_i:0\le i<j<k\}.
+\]
+
+All elements of `Delta` are distinct and
+
+\[
+|\Delta|=\binom{k}{2}=\frac{M-1}{2}.
+\]
+
+For `1<=r<=(M-1)/2`, define
+
+\[
+m_r=1_\Delta(r)+1_\Delta(M-r).
+\tag{1}
+\]
+
+Because `Delta` lies in `[1,D]` and `D<M`,
+
+\[
+m_r\in\{0,1,2\}.
+\]
+
+There are `(M-1)/2` unordered nonzero residue pairs and
+
+\[
+\sum_{r=1}^{(M-1)/2}m_r=|\Delta|=\frac{M-1}{2}.
+\]
+
+Therefore
+
+\[
+\boxed{\#\{r:m_r=0\}=\#\{r:m_r=2\}.}
+\tag{2}
+\]
+
+In directed form, let
+
+\[
+\nu(t)=\#\{(i,j):i\ne j,\ a_j-a_i\equiv t\pmod M\}.
+\]
+
+Then `nu(t)` belongs to `{0,1,2}` for every nonzero residue, and the number of
+holes `nu=0` equals the number of duplicates `nu=2`.
+
+## 2. Protected initial residues
+
+Put
+
+\[
+g=M-D.
+\]
+
+For every `1<=r<g`, one has `M-r>D`, so the second indicator in (1) vanishes.
+Hence
+
+\[
+\boxed{m_r=1_\Delta(r)\in\{0,1\}\quad(1\le r<g).}
+\tag{3}
+\]
+
+No protected initial residue can be duplicated. A missing small difference
+must be compensated by a double residue pair elsewhere through (2).
+
+When every `m_r=1`, `A` is a cyclic planar difference set modulo `M`; cutting
+at its empty arc of length `g-1` recovers the interval ruler.
+
+## 3. Exact shifted pair-sum interpretation of duplicates
+
+A double pair `m_r=2` means that both `r` and `M-r` occur as positive
+ordinary differences. Thus there are indices with
+
+\[
+(a_j-a_i)+(a_\ell-a_m)=M,
+\]
+
+or equivalently
+
+\[
+a_j+a_\ell=M+a_i+a_m.
+\tag{4}
+\]
+
+Because `A` is Sidon, both unordered pair sums in (4) have unique
+representations. The cyclic defect is therefore an exact matching between a
+set of low pair sums and the corresponding pair sums shifted by `M`.
+Pairwise autocorrelation records only how many such matches exist; the
+incidence-coupled hierarchy records which endpoints participate.
+
+## 4. Gateway to the upper subpolynomial error
+
+Suppose one proves the following stability assertion uniformly for all
+`k`-mark rulers:
+
+\[
+M-D\le k^{1+o(1)}.
+\tag{5}
+\]
+
+Let `A subset {0,...,N-1}` be extremal and `k=|A|`. If its diameter is at least
+`M`, then `k^2-k+1<=N-1`. Otherwise (5) gives
+
+\[
+N-1\ge D\ge k^2-k+1-k^{1+o(1)}.
+\]
+
+The elementary bound `k=O(sqrt N)` then implies
+
+\[
+\boxed{F(N)\le\sqrt N+N^{o(1)}.}
+\tag{6}
+\]
+
+Thus the upper half of the subpolynomial-error assertion is exactly a
+`k^{1+o(1)}` stability theorem for the almost-perfect cyclic completion.
+Equation (5) is not proved in this repository.
+
+
+================================================================================
+FILE: proofs/decomposition19.md
+================================================================================
+# The square-and-potential decomposition
+
+This note proves the global inequality at the heart of the continuum barrier.
+All functions and kernels are those defined in `delay_profile.md`.
+
+## 1. Admissible scalar system
+
+Let `H>0`. Let `p>=0` belong to `L^2([0,H])`, with `int p=1`, and extend it by
+zero. Let `w-1` belong to `L^1 cap L^2` and suppose
+
+\[
+T_pw(x):=\int_0^H p(u)w(x+u)\,du\ge1
+\quad\text{for almost every }x\ge0.
+\tag{1}
+\]
+
+Set
+
+\[
+A=\int p^2,
+\qquad
+B=H+\int_0^\infty(w^2-1).
+\]
+
+Write
+
+\[
+f=p-p_0,
+\qquad
+g=w-w_0.
+\]
+
+Then `int f=0`.
+
+## 2. The causal operator identity
+
+Define
+
+\[
+(Kf)(t)=f(t)+\int_0^t h_0(x)f(t-x)\,dx.
+\tag{2}
+\]
+
+Then
+
+\[
+\boxed{
+\|Kf\|_2^2
+ =\|f\|_2^2-
+ \iint f(u)f(v)D(|u-v|)\,du\,dv.}
+\tag{3}
+\]
+
+### Proof of (3)
+
+First truncate every outer `t`-integral at `T`, expand the square, and then
+let `T` tend to infinity. The cross term between `f` and `h_0*f` is
+
+\[
+\iint f(u)f(v)h_0(|u-v|)\,du\,dv.
+\]
+
+For the convolution-square term, suppose `v>=u`, put `r=v-u`, and write
+
+\[
+\int_v^T h_0(t-u)h_0(t-v)\,dt
+ =\int_0^{T-v}h_0(x+r)h_0(x)\,dx.
+\]
+
+Since `h_0=2+O(e^{-eta x})`, this equals
+
+\[
+4(T-v)+\int_0^\infty(h_0(x+r)h_0(x)-4)\,dx+o(1).
+\]
+
+After multiplication by `f(u)f(v)` and symmetric integration, the `4T` term
+vanishes because `int f=0`. The terms involving `u+v` also vanish. The only
+cutoff remainder is `-2|u-v|`. Hence the convolution-square term is
+
+\[
+\iint f(u)f(v)
+\left[
+\int_0^\infty(h_0(x)h_0(x+|u-v|)-4)\,dx
+-2|u-v|
+\right]du\,dv.
+\]
+
+Adding the cross term and using `C=h_0+int(h_0h_0-4)` gives
+
+\[
+\|Kf\|_2^2=\|f\|_2^2+
+\iint f(u)f(v)(C(|u-v|)-2|u-v|)du\,dv,
+\]
+
+which is (3), because `D(r)=2r-C(r)`. Absolute convergence follows from the
+compact support of `f` and exponential decay of `h_0-2`.
+
+## 3. Pairing the majorant with the positive dual measure
+
+Since `T_{p_0}w_0=1`, (1) is
+
+\[
+T_fw_0+T_pg\ge0.
+\]
+
+Pair this nonnegative function with
+
+\[
+\mu_0=\delta_0+h_0(x)dx.
+\]
+
+The pairing is finite after subtracting the limiting constants; this is
+legitimate because `int f=0`, `g in L^1`, and `h_0-2` decays exponentially.
+Using `T_{p_0}^*mu_0=2w_0`, one obtains
+
+\[
+0\le\int f(u)\Psi(u)\,du
+ +2\int g(t)w_0(t)\,dt
+ +\int g(t)(Kf)(t)\,dt.
+\tag{4}
+\]
+
+Here `Psi=C-1/3` is equation (23) of `delay_profile.md`.
+
+The objective difference from the extremizer is
+
+\[
+\begin{aligned}
+\frac A2+B-\frac43
+={}&H-1+\int p_0f+\frac12\|f\|_2^2\\
+&+2\int w_0g+\|g\|_2^2.
+\end{aligned}
+\tag{5}
+\]
+
+Use (4) to eliminate `2 int w_0g`, complete the square in `g`, and invoke
+(3). This yields
+
+\[
+\frac A2+B-\frac43
+\ge\left\|g-\frac12Kf\right\|_2^2+Q_H(p),
+\tag{6}
+\]
+
+where
+
+\[
+\begin{aligned}
+Q_H(p)={}&H-1-\int_{u>1}p(u)C(u)\,du
+ +\frac14\|p-p_0\|_2^2\\
+&+\frac14\iint
+ (p-p_0)(u)(p-p_0)(v)D(|u-v|)\,du\,dv.
+\end{aligned}
+\tag{7}
+\]
+
+The term involving `C` follows because `p_0-Psi` is constant `1/3` on
+`[0,1]`, and `int f=0` removes that constant.
+
+## 4. Exact reduction of `Q_H`
+
+Since `D=0` when both arguments lie in `[0,1]`, expand (7). The cross term with
+`p_0` is evaluated by the weighted renewal identity
+
+\[
+C(u)+\frac12\int_0^1p_0(v)D(u-v)\,dv=u
+\quad(u\ge1).
+\]
+
+After cancellation,
+
+\[
+\boxed{
+\begin{aligned}
+Q_H(p)={}&H-\frac23-\int_0^Hup(u)\,du
+ +\frac14\int_0^Hp(u)^2\,du\\
+&+\frac14\int_0^H\int_0^H
+ p(u)p(v)D(|u-v|)\,du\,dv.
+\end{aligned}}
+\tag{8}
+\]
+
+The last term is nonnegative because `p>=0` and `D>=0` pointwise.
+
+## 5. Pointwise endpoint certificate
+
+Put `x=H-u` and `q(x)=p(H-x)`. For all `x,q>=0`,
+
+\[
+xq+\frac{q^2}{4}\ge q-(1-x)_+^2.
+\tag{9}
+\]
+
+For `0<=x<=1`, the difference is exactly
+
+\[
+\left(\frac q2-(1-x)\right)^2.
+\]
+
+For `x>=1`, the difference is
+
+\[
+(x-1)q+\frac{q^2}{4}.
+\]
+
+Integrating (9), using `int q=1` and
+`int_0^1(1-x)^2dx=1/3`, gives
+
+\[
+H-\int up+\frac14\int p^2\ge\frac23.
+\tag{10}
+\]
+
+Equations (6), (8), and (10) prove
+
+\[
+\boxed{\frac A2+B\ge\frac43.}
+\tag{11}
+\]
+
+Every term discarded in this proof is displayed as a square or as an integral
+of a pointwise nonnegative kernel.
+
+## 6. Vector-valued systems
+
+Let `lambda_r>0`, `sum lambda_r=1`. Let each `p_r` be a probability density on
+the common interval `[0,H]`, and assume only the combined covering inequality
+
+\[
+\sum_r\lambda_rT_{p_r}w_r\ge1.
+\tag{12}
+\]
+
+Pair (12) once with `mu_0`, then repeat the preceding algebra componentwise and
+sum with weights `lambda_r`. The term `H-1` occurs once; every square,
+`D`-energy, first moment, and pointwise endpoint certificate averages linearly.
+Thus, with
+
+\[
+A=\sum_r\lambda_r\int p_r^2,
+\qquad
+B=H+\sum_r\lambda_r\int(w_r^2-1),
+\]
+
+one again obtains (11).
+
+
+================================================================================
+FILE: proofs/delay_profile.md
+================================================================================
+# The extremal delay profile
+
+All functions are real-valued on the nonnegative half-line. Define
+
+\[
+p_0(u)=2u\,1_{[0,1]}(u).
+\]
+
+Let
+
+\[
+w_0(t)=e^t-1\quad(0\le t<1)
+\]
+
+and for `t>=1` define the right-continuous continuation
+
+\[
+w_0(t)=\int_{t-1}^t w_0(s)\,ds.
+\tag{1}
+\]
+
+Put
+
+\[
+z_0=w_0-1,
+\qquad h_0=w_0+1=2+z_0.
+\]
+
+The value at `t=1` has a downward jump of one:
+`w_0(1-)=e-1`, `w_0(1+)=e-2`.
+
+## 1. Decay and integrability
+
+For `t>=1`,
+
+\[
+z_0(t)=\int_{t-1}^t z_0(s)\,ds.
+\tag{2}
+\]
+
+Its Laplace transform, initially for `Re(s)>0`, is
+
+\[
+Z(s)=\int_0^\infty e^{-st}z_0(t)\,dt
+ =\frac{(2-s)e^s-(2+s)}
+ {s((s-1)e^s+1)}.
+\tag{3}
+\]
+
+This follows by taking the Laplace transform of the distributional equation
+
+\[
+z_0'=z_0+2\,1_{(0,1)}-1_{(1,\infty)}z_0(\cdot-1)-\delta_1.
+\]
+
+The apparent singularity of (3) at zero is removable; expansion gives
+
+\[
+Z(s)=-\frac13+\frac{s}{18}+O(s^2).
+\tag{4}
+\]
+
+The characteristic equation away from zero is
+
+\[
+s=1-e^{-s}.
+\tag{5}
+\]
+
+Its only root in `Re(s)>=0` is zero. Indeed, if `s=x+iy`, the imaginary part
+of (5) gives `y=e^{-x}sin y`. If `x>0` and `y!=0`, then
+`|y|<|sin y|<=|y|`, impossible. Thus `y=0`, and
+`x=1-e^{-x}` has only `x=0`. At `x=0`, `y=sin y` again forces `y=0`.
+
+There is a spectral gap. For any fixed `delta>0`, a root with
+`Re(s)>=-delta` satisfies
+
+\[
+|s-1|=e^{-\Re s}\le e^\delta,
+\]
+
+so roots in that strip lie in a compact set. Since zero is isolated and
+removable in `Z`, some `eta>0` exists for which `Z` is holomorphic on
+`Re(s)>=-eta`. On vertical lines in that strip, (3) and its derivative have
+the decay required for one integration by parts in the Bromwich integral.
+Shifting the contour to `Re(s)=-eta` yields
+
+\[
+z_0(t)=O(e^{-\eta t}).
+\tag{6}
+\]
+
+Thus `z_0` belongs to both `L^1` and `L^2`, and every Fubini interchange below
+is absolutely justified.
+
+## 2. Active covering identity
+
+Define
+
+\[
+G(x)=\int_0^1 2u\,w_0(x+u)\,du.
+\]
+
+Direct integration gives `G(0)=1`. Integration by parts gives, at every point
+of differentiability,
+
+\[
+G'(x)=2w_0(x+1)-2\int_x^{x+1}w_0(t)\,dt=0
+\]
+
+by (1). Hence
+
+\[
+\boxed{\int_0^1 2u\,w_0(x+u)\,du=1\quad(x\ge0).}
+\tag{7}
+\]
+
+Equivalently, `T_{p_0}z_0=0`.
+
+## 3. The first two exact integrals
+
+Integrate `T_{p_0}z_0=0` over `x>=0`. Fubini gives
+
+\[
+0=\int_0^1t^2z_0(t)\,dt+\int_1^\infty z_0(t)\,dt.
+\]
+
+Therefore
+
+\[
+\int_0^\infty z_0(t)\,dt
+ =\int_0^1(1-t^2)(e^t-2)\,dt
+ =-\frac13.
+\tag{8}
+\]
+
+For the square integral, let
+
+\[
+\nu=\frac12\delta_0+\frac12z_0(t)\,dt.
+\]
+
+The adjoint of `T_{p_0}` satisfies
+
+\[
+T_{p_0}^*\nu(t)=
+\begin{cases}
+ z_0(t)+1-t^2,&0\le t<1,\\
+ z_0(t),&t\ge1.
+\end{cases}
+\tag{9}
+\]
+
+For `t<1`, (9) is the elementary identity
+
+\[
+t+\int_0^t(t-x)(e^x-2)\,dx=e^t-1-t^2.
+\]
+
+For `t>=1`, the density contribution is
+
+\[
+\int_{t-1}^t(t-x)z_0(x)\,dx.
+\]
+
+Equation (2) gives the unweighted integral `z_0(t)`, while (7), shifted by
+`t-1`, says the complementary weighted integral is zero. Hence the displayed
+integral equals `z_0(t)`.
+
+Pairing (9) with `z_0` and using `T_{p_0}z_0=0` gives
+
+\[
+0=\int_0^\infty z_0(t)^2\,dt
+  +\int_0^1(1-t^2)z_0(t)\,dt.
+\]
+
+Together with (8),
+
+\[
+\boxed{\int_0^\infty z_0(t)^2\,dt=\frac13.}
+\tag{10}
+\]
+
+Consequently
+
+\[
+\int_0^\infty(w_0(t)^2-1)\,dt
+ =2\int z_0+\int z_0^2=-\frac13.
+\tag{11}
+\]
+
+## 4. Positive dual measure and stationarity
+
+Let
+
+\[
+\mu_0=\delta_0+h_0(t)\,dt.
+\tag{12}
+\]
+
+It is positive. The exact adjoint equation is
+
+\[
+\boxed{T_{p_0}^*\mu_0=2w_0.}
+\tag{13}
+\]
+
+For `0<=t<1`,
+
+\[
+2t+\int_0^t2(t-x)e^x\,dx=2(e^t-1).
+\]
+
+For `t>=1`, the left side is
+
+\[
+\int_0^1 2v\,h_0(t-v)\,dv.
+\]
+
+The delay relation gives `int_0^1 h_0(t-v)dv=h_0(t)`. The shifted active
+identity (7) gives
+
+\[
+\int_0^1 2(1-v)h_0(t-v)\,dv=2.
+\]
+
+Subtracting yields `2h_0(t)-2=2w_0(t)`.
+
+## 5. Correlation and renewal slack
+
+Define the absolutely convergent regularized correlation
+
+\[
+C(r)=h_0(r)+\int_0^\infty
+ \big(h_0(x)h_0(x+r)-4\big)\,dx.
+\tag{14}
+\]
+
+Using `h_0=2+z_0` and (8)--(10), `C(0)=0`.
+
+For `0<r<1`, differentiate after expanding (14) in the integrable function
+`z_0`. The distributional delay equation gives
+
+\[
+C'(r)=C(r)-C(1-r)+4(1-r).
+\tag{15}
+\]
+
+For completeness, the extra term is not optional: writing
+`R(r)=int z_0(x)z_0(x+r)dx`, one obtains
+
+\[
+R'(r)=R(r)-R(1-r)+2\int_0^{1-r}z_0(x)dx-z_0(1-r),
+\]
+
+and substituting `z_0(t)=e^t-2` on `[0,1)` produces `4(1-r)` in (15).
+
+Let `F(r)=C(r)-2r`. Equation (15) becomes
+
+\[
+F'(r)=F(r)-F(1-r).
+\]
+
+Differentiating once more gives `F''=0`. Substitution back forces the slope to
+vanish, and `F(0)=0`; hence
+
+\[
+\boxed{C(r)=2r\quad(0\le r<1).}
+\tag{16}
+\]
+
+For `r>=1`, the delay equation applied to `h_0(x+r)` gives
+
+\[
+\boxed{C(r)=\int_0^1C(r-v)\,dv.}
+\tag{17}
+\]
+
+Set
+
+\[
+D(r)=2r-C(r),
+\]
+
+and extend `D` by zero on negative arguments. Then
+
+\[
+D(r)=0\quad(0\le r<1),
+\qquad
+D(r)=1+\int_0^1D(r-v)\,dv\quad(r\ge1).
+\tag{18}
+\]
+
+In particular,
+
+\[
+\boxed{D(r)\ge0\quad(r\ge0).}
+\tag{19}
+\]
+
+A weighted renewal identity will be needed. Put
+
+\[
+J(r)=\int_0^1(1-v)D(r-v)\,dv.
+\]
+
+For `r>1`, changing variables shows
+
+\[
+J'(r)=D(r)-\int_{r-1}^{r}D(t)\,dt=1
+\]
+
+by (18), and `J(1)=0`. Thus
+
+\[
+J(r)=r-1.
+\tag{20}
+\]
+
+Since `int_0^1D(r-v)dv=D(r)-1`, equation (20) implies
+
+\[
+D(r)-\int_0^1vD(r-v)\,dv=r.
+\tag{21}
+\]
+
+Equivalently,
+
+\[
+\boxed{C(r)+\frac12\int_0^1p_0(v)D(r-v)\,dv=r
+\quad(r\ge1).}
+\tag{22}
+\]
+
+Finally define
+
+\[
+\Psi(u)=w_0(u)+\int_0^\infty h_0(x)z_0(x+u)\,dx.
+\]
+
+Expanding (14) and using (8) gives
+
+\[
+\boxed{\Psi(u)=C(u)-\frac13.}
+\tag{23}
+\]
+
+On `[0,1]`, (16) says `Psi(u)=p_0(u)-1/3`. These are the Euler--Lagrange
+stationarity identities used by the barrier proof.
+
+
+================================================================================
+FILE: proofs/incidence_hierarchy.md
+================================================================================
+# Translate-incidence hierarchy and the high-moment gateway
+
+This note records the first hierarchy that sees common vertex incidence rather
+than only pairwise lag autocorrelation.
+
+## 1. Exact moments for a planar difference set
+
+Let `D` be a cyclic `(M,k,1)` difference set, so
+
+\[
+M=k^2-k+1.
+\]
+
+Fix the interval
+
+\[
+I_H=\{0,1,\ldots,H-1\}\subset\mathbb Z/M\mathbb Z
+\]
+
+and define
+
+\[
+X_s=|(D+s)\cap I_H|,
+\qquad s\in\mathbb Z/M\mathbb Z.
+\tag{1}
+\]
+
+Double counting gives
+
+\[
+\boxed{\sum_sX_s=kH.}
+\tag{2}
+\]
+
+Every unordered pair of distinct points of `I_H` is contained in exactly one
+translate of `D`, because its oriented difference has exactly one ordered
+representation in `D`. Therefore
+
+\[
+\boxed{\sum_s\binom{X_s}{2}=\binom H2.}
+\tag{3}
+\]
+
+For every `r>=3`, an `r`-subset of `I_H` is contained in at most one translate
+of `D`: any two of its points already determine the translate. Hence
+
+\[
+\boxed{\sum_s\binom{X_s}{r}\le\binom Hr.}
+\tag{4}
+\]
+
+Equations (2)--(4) are exact incidence constraints. The second identity is
+pairwise; the higher inequalities retain common-translate compatibility.
+
+## 2. The second-moment plateau
+
+From (2) and (3),
+
+\[
+\sum_sX_s^2=H(k+H-1).
+\tag{5}
+\]
+
+Let `V=#{s:X_s>0}`. Cauchy--Schwarz gives
+
+\[
+V\ge\frac{k^2H}{k+H-1}.
+\tag{6}
+\]
+
+Thus the number `Z_0` of zero windows satisfies the exact bound
+
+\[
+\boxed{
+Z_0\le M-\frac{k^2H}{k+H-1}
+ =\frac{(k-1)(M-H)}{k+H-1}.}
+\tag{7}
+\]
+
+If the binary cyclic sequence `1_D` has a run of `Z` consecutive zeros, then
+for every `H<=Z`, at least `Z-H+1` cyclic intervals of length `H` are empty.
+Combining with (7), and taking `H=floor(Z/2)`, gives only
+
+\[
+Z=O(k^{3/2}).
+\tag{8}
+\]
+
+This is the exact second-moment source of the `N^{1/4}` barrier.
+
+## 3. Why the raw higher factorial bounds do not automatically help
+
+The right side of (4), divided by `M`, is of order `H^r/k^2`. If
+`mu=kH/M asymp H/k`, Poisson-scale factorial moments would be of order
+`mu^r=H^r/k^r`. For `r>=3`, (4) is weaker by a factor of order `k^{r-2}`.
+A two-point distribution concentrated at zero and at a value of order `mu`
+can saturate the first two moments while staying far below every bound (4).
+This is the **translate-clustering obstruction**.
+
+A separate estimate is therefore needed to rule out a population of rare,
+dense interval--translate intersections.
+
+## 4. Exact high-moment gateway theorem
+
+Let
+
+\[
+\mu=\frac1M\sum_sX_s=\frac{kH}{M}.
+\]
+
+Assume that, for some integer `r>=1`, the centered moment estimate
+
+\[
+\frac1M\sum_s|X_s-\mu|^{2r}\le C_r\mu^r
+\tag{9}
+\]
+
+holds for every interval length under consideration. At a zero window,
+`|X_s-mu|^{2r}=mu^{2r}`, so
+
+\[
+\frac{Z_0}{M}\le C_r\mu^{-r}.
+\tag{10}
+\]
+
+Let `Z>=4` be a zero run and take `H=floor(Z/2)`. Then
+
+\[
+Z-H+1\ge Z/2,
+\qquad H\ge Z/3.
+\]
+
+Using (10),
+
+\[
+\frac Z2
+\le M C_r\left(\frac{M}{kH}\right)^r
+\le M C_r\left(\frac{3M}{kZ}\right)^r.
+\]
+
+Therefore
+
+\[
+\boxed{
+Z^{r+1}\le 2\,3^r C_r\frac{M^{r+1}}{k^r}.}
+\tag{11}
+\]
+
+Since `M asymp k^2`, a fixed-order Poisson-scale moment bound gives
+
+\[
+Z\ll_r C_r^{1/(r+1)}k^{1+1/(r+1)}.
+\tag{12}
+\]
+
+If (9) holds for orders `r=r(k)` tending to infinity with
+
+\[
+\log C_{r(k)}=o(r(k)\log k),
+\]
+
+then
+
+\[
+\boxed{Z=k^{1+o(1)}.}
+\tag{13}
+\]
+
+This implication is unconditional; the moment hypothesis is the open part.
+It identifies an exact route from incidence control to subpolynomial cyclic
+gaps.
+
+## 5. Extension to an almost-perfect cyclic completion
+
+For the ruler reduction in `cyclic_defect_reduction.md`, let `nu(t)` be the
+directed cyclic difference multiplicity. For an interval `I_H`, the translated
+window counts satisfy
+
+\[
+\sum_sX_s(X_s-1)
+ =\sum_{x\ne y\in I_H}\nu(y-x).
+\tag{14}
+\]
+
+Thus holes and duplicates perturb the second moment by a weighted defect term.
+The third and higher moments count compatible collections of directed edges
+sharing one translate. They are exactly where the common gradient/vertex
+realization enters.
+
+The unresolved target is a stability version of (9) in which the right side
+also includes a quantitatively controlled contribution from the cyclic defect.
+Combined with the hole--duplicate balance and the protected initial residues,
+such an estimate would imply the stability bound `M-D<=k^{1+o(1)}`.
+
+## 6. Exact incidence-coupled Level-2 formulation
+
+For an ordered ruler introduce one-hot variables
+
+\[
+X_{i,\ell,t}=1_{\{a_{i+\ell}-a_i=t\}}.
+\]
+
+The exact polynomial constraints include
+
+\[
+X_{i,\ell,t}^2=X_{i,\ell,t},
+\qquad
+\sum_tX_{i,\ell,t}=1,
+\]
+
+\[
+X_{i,\ell,t}X_{j,m,t}=0
+\quad\text{for distinct intervals},
+\]
+
+and the completion localizers
+
+\[
+X_{i,\ell,t}X_{i+\ell,r,s}
+ =X_{i,\ell,t}X_{i+\ell,r,s}X_{i,\ell+r,t+s}.
+\tag{15}
+\]
+
+A Level-2 moment relaxation keeps all moments of degree at most two and the
+linearized consequences of (15) whose total degree fits the level. Unlike the
+uncoupled rank cone, this system ties each lag to the same vertex potential.
+No exact asymptotic optimum for this cone is claimed here.
+
+## 7. Exact pseudodistribution proving the raw factorial plateau
+
+For an integer `mu>=1`, define
+
+\[
+\mathbb P(X=0)=\frac1{\mu+1},
+\qquad
+\mathbb P(X=\mu+1)=\frac\mu{\mu+1}.
+\tag{16}
+\]
+
+Then
+
+\[
+\mathbb EX=\mu,
+\qquad
+\mathbb E(X)_2=\mu^2,
+\]
+
+and, for every `r>=2`,
+
+\[
+\mathbb E(X)_r
+ =\mu^2(\mu-1)(\mu-2)\cdots(\mu-r+2)
+ \le\mu^r.
+\tag{17}
+\]
+
+Thus even Poisson-scale *factorial* moments permit zero mass of order
+`1/mu`, exactly the amount corresponding to the `k^{3/2}` gap scale. By
+contrast,
+
+\[
+\mathbb E|X-\mu|^{2r}
+ =\frac{\mu^{2r}+\mu}{\mu+1}
+ \asymp\mu^{2r-1},
+\tag{18}
+\]
+
+which is far above the centered Poisson scale `mu^r` when `r>1`. This proves
+that the gateway must control centered fluctuations or an equivalent
+incidence-localizer; raw factorial counts cannot suffice.
+
+
+================================================================================
+FILE: proofs/rank_aggregate_plateau.md
+================================================================================
+# Exact plateau for the uncoupled rank-aggregate relaxation
+
+Let
+
+\[
+d_{i,\ell}=a_{i+\ell}-a_i.
+\]
+
+The following information is imposed:
+
+- all completion identities
+  `d_{i,ell+r}=d_{i,ell}+d_{i+ell,r}`;
+- rank-sum symmetry and concavity;
+- every aggregate band floor
+
+\[
+\sum_{\ell\le L}\sum_i d_{i,\ell}
+\ge\frac{M_L(M_L+1)}2,
+\quad
+M_L=kL-\frac{L(L+1)}2.
+\]
+
+No one-hot variable identifies which integer lag belongs to which interval.
+
+For even `k=2n`, put essentially all diameter `D` in the central gap. For
+`L<=n`, the central gap appears in
+
+\[
+P_L=\frac{L(L+1)}2
+\]
+
+band intervals, so
+
+\[
+Q_L=P_LD.
+\]
+
+The floor requires
+
+\[
+D\ge\rho(k,L):=\frac{M_L(M_L+1)}{L(L+1)}.
+\]
+
+Writing `x=L+1`, exact algebra gives
+
+\[
+\begin{aligned}
+k^2-\rho(k,L)
+={}&\frac{k^2}{x}+kx-k-\frac{k}{x}\\
+&-\frac{x^2}{4}+\frac{x}{4}+\frac12.
+\end{aligned}
+\tag{1}
+\]
+
+Uniformly for `L<=k/2`, the right side is at least
+
+\[
+2k^{3/2}-O(k)
+\]
+
+at its critical minimum. For `L>k/2`, the corresponding floor is only
+`(3/4)k^2+O(k)`. Consequently, for every fixed `beta<2`,
+
+\[
+D=k^2-\beta k^{3/2}
+\]
+
+passes every aggregate floor for all sufficiently large even `k`.
+
+Small positive dyadic side gaps may be inserted and subtracted from the
+central gap. This makes the marks strictly increasing while preserving every
+inequality. Because the variables come from an actual gap vector, all
+completion identities hold exactly, the moment matrix is rank one and PSD,
+
+\[
+R_\ell=R_{k-\ell},
+\]
+
+and
+
+\[
+R_{\ell+1}-2R_\ell+R_{\ell-1}
+=-(g_\ell+g_{k-\ell})\le0.
+\]
+
+The pairwise-autocorrelation deficit in ruler normalization is
+
+\[
+\beta_0=\frac{4\sqrt2}{3}<2.
+\]
+
+Therefore this uncoupled rank-aggregate layer admits the pairwise value and
+cannot improve it. The missing information is the incidence equivalence
+
+\[
+\text{lag }t\text{ is occupied}
+\Longleftrightarrow
+\text{one specific interval }d_{i,\ell}\text{ equals }t,
+\]
+
+with its degree-two localizers.
+
+
+================================================================================
+FILE: proofs/spectral_selector_factorization.md
+================================================================================
+# Exact spectral-selector factorization for a perfect ruler
+
+This is a separate attempt to move beyond autocorrelation smoothing by keeping
+the full spectral factor.
+
+Let
+
+\[
+A=\{0=a_0<\cdots<a_{k-1}=D\}
+\]
+
+be a perfect cyclic ruler modulo
+
+\[
+M=k^2-k+1,
+\]
+
+meaning that its positive differences choose exactly one element from every
+pair `{r,M-r}`. Put `g=M-D`.
+
+Define
+
+\[
+P(z)=\sum_{a\in A}z^a,
+\qquad
+P^\#(z)=z^DP(z^{-1}),
+\]
+
+and
+
+\[
+Q(z)=P(z)P^\#(z)-(k-1)z^D.
+\tag{1}
+\]
+
+## 1. Binary selector polynomial
+
+The coefficient of `z^{D+d}` in `P P#` is the number of ordered pairs with
+difference `d`. The ruler property makes every nonzero coefficient zero or
+one, and the center coefficient becomes one after subtracting `k-1`. Hence
+`Q` is a binary polynomial with exactly
+
+\[
+1+k(k-1)=M
+\]
+
+nonzero coefficients.
+
+Those exponents represent every residue modulo `M` exactly once. Therefore
+
+\[
+Q(z)\equiv S_M(z):=1+z+\cdots+z^{M-1}\pmod{z^M-1}.
+\tag{2}
+\]
+
+There is a unique binary selector polynomial
+
+\[
+E(z)=\sum_{r=0}^{M-1}\varepsilon_rz^r,
+\qquad\varepsilon_r\in\{0,1\},
+\]
+
+such that
+
+\[
+Q(z)=S_M(z)+(z^M-1)E(z).
+\tag{3}
+\]
+
+Since `z^M-1=(z-1)S_M`,
+
+\[
+\boxed{Q(z)=S_M(z)\bigl(1+(z-1)E(z)\bigr).}
+\tag{4}
+\]
+
+This is an integral factorization, not only a root-of-unity identity.
+
+## 2. Exact support and complement symmetry
+
+Since `deg Q=2D=2M-2g`, a lifted exponent `r+M` can occur only when
+
+\[
+0\le r\le M-2g.
+\]
+
+Put
+
+\[
+L=M-2g+1.
+\]
+
+Then `E` is supported on `{0,...,L-1}`. Polynomial `Q` is palindromic about
+`D`. If the representative of residue `r` is lifted to `r+M`, its mirror is
+the unlifted exponent `L-1-r`; conversely an unlifted `r` mirrors to a lifted
+`L-1-r`. Hence
+
+\[
+\boxed{\varepsilon_r+\varepsilon_{L-1-r}=1
+\quad(0\le r<L).}
+\tag{5}
+\]
+
+In particular, `L` is even and
+
+\[
+\boxed{E(1)=L/2=(M+1)/2-g.}
+\tag{6}
+\]
+
+The same identity follows by differentiating (4) at one: palindromy gives
+`Q'(1)=DM`, while `S_M'(1)=M(M-1)/2`.
+
+## 3. What this machinery sees and what it does not
+
+Equations (4)--(6) retain the exact spectral factorization and ordinary
+support gap. They reduce the residue-lift pattern to a balanced
+anti-palindromic binary word. But that class has `2^{L/2}` elements and exists
+for every admissible `g`; divisibility and palindromy alone impose no
+subpolynomial bound on `g`.
+
+The missing constraint is that
+
+\[
+Q+(k-1)z^D=P P^\#
+\]
+
+must have a **binary spectral factor** `P` whose exponents form a gradient
+set. Characterizing which selector words admit that factor is equivalent to a
+nonlinear incidence-realizability problem. This is the
+**selector-factor plateau**.
+
+
+================================================================================
+FILE: proofs/vector_covering_lemma.md
+================================================================================
+# Vector-valued covering lemmas
+
+This note gives the analytic bridge used by the finite certificate and the
+one-sided continuum problem. No optimization statement is used in either
+proof.
+
+## 1. Energy estimate requiring no kernel symmetry
+
+Let `A` be a Sidon subset of `{0,...,N-1}`, with `|A|=k`. Let `K` be a
+nonnegative probability sequence on the integers with finite support. Put
+
+\[
+u=1_A*K,
+\qquad
+C(d)=\sum_s K(s)K(s+d).
+\]
+
+The autocorrelation `C` is nonnegative and even, whether or not `K` is
+symmetric, and
+
+\[
+\sum_{d\in\mathbb Z}C(d)=1.
+\]
+
+If `Delta(A)` is the set of positive differences, then
+
+\[
+\begin{aligned}
+\|u\|_2^2
+ &=kC(0)+2\sum_{d\in\Delta(A)}C(d)\\
+ &\le kC(0)+2\sum_{d\ge1}C(d)\\
+ &=1+(k-1)C(0).
+\end{aligned}
+\tag{1}
+\]
+
+The only Sidon input is that each positive difference occurs at most once.
+
+For kernels `K_r` and weights `lambda_r>=0`, `sum lambda_r=1`, averaging (1)
+gives
+
+\[
+\sum_r\lambda_r\|1_A*K_r\|_2^2
+\le 1+(k-1)\sum_r\lambda_r C_r(0).
+\tag{2}
+\]
+
+## 2. Exact finite symmetric covering lemma
+
+Fix integers `m,L,R>=1`. For each `r`, let
+
+\[
+p^{(r)}=(p_0^{(r)},\ldots,p_{m-1}^{(r)})
+\]
+
+be a nonnegative symmetric probability vector. Let `lambda_r>=0` sum to one.
+Choose real numbers `w_j^{(r)}` for `0<=j<Lm` and extend them by
+`w_j^{(r)}=1` for `j>=Lm`. Assume
+
+\[
+\sum_{r=1}^R\lambda_r\sum_{i=0}^{m-1}
+ p_i^{(r)}w_{q+i}^{(r)}\ge1
+\qquad(0\le q\le Lm).
+\tag{3}
+\]
+
+Define
+
+\[
+a=m\sum_r\lambda_r\sum_i(p_i^{(r)})^2,
+\tag{4}
+\]
+
+and
+
+\[
+b=1+2\left(
+ \frac1m\sum_r\lambda_r\sum_{j=0}^{Lm-1}(w_j^{(r)})^2-L
+\right).
+\tag{5}
+\]
+
+### Lemma 2.1
+
+If `b>0`, then
+
+\[
+F(N)\le \sqrt N+\sqrt{ab}\,N^{1/4}+O(1).
+\tag{6}
+\]
+
+The implied constant depends on the fixed finite data, not on `N`.
+
+### Proof
+
+Choose a positive integer `h` and set `H=mh`. Define
+
+\[
+K_r(s)=\frac{p_i^{(r)}}h
+\quad\text{for }ih\le s<(i+1)h,
+\]
+
+and zero otherwise. Then
+
+\[
+C_r(0)=\frac{m}{H}\sum_i(p_i^{(r)})^2,
+\]
+
+so (2) becomes
+
+\[
+\mathcal E:=\sum_r\lambda_r\|1_A*K_r\|_2^2
+\le1+\frac{a(k-1)}H.
+\tag{7}
+\]
+
+For sufficiently large `N`, take `N>=2LH`. On
+
+\[
+J=\{0,1,\ldots,N+H-2\},
+\]
+
+put the block values `w_j^{(r)}` on the first `LH` sites, put the reflected
+block values on the last `LH` sites, and put `1` elsewhere. Call the resulting
+sequence `Q_r`.
+
+For any `x` with `0<=x<N`, the interval `[x,x+H-1]` meets at most one modified
+boundary. At the left boundary, writing `x=qh+t`, `0<=t<h`, the convolution
+
+\[
+\sum_r\lambda_r\sum_sK_r(s)Q_r(x+s)
+\]
+
+is a convex combination, with coefficients `1-t/h` and `t/h`, of covering
+constraints `q` and `q+1` in (3). It is therefore at least one. Symmetry of
+`p^{(r)}` reduces the right boundary to the same calculation. In the interior
+the convolution equals one. Thus
+
+\[
+\sum_r\lambda_r(K_r*Q_r)(x)\ge1
+\qquad(0\le x<N).
+\tag{8}
+\]
+
+Summing (8) over `x in A`, interchanging sums, and applying weighted
+Cauchy--Schwarz gives
+
+\[
+k^2\le
+\left(\sum_r\lambda_r\|Q_r\|_2^2\right)\mathcal E.
+\tag{9}
+\]
+
+The first factor is exact. Starting from the constant sequence one on `J`,
+the two modified boundaries contribute
+
+\[
+2h\sum_r\lambda_r\sum_{j=0}^{Lm-1}
+\big((w_j^{(r)})^2-1\big).
+\]
+
+Using (5),
+
+\[
+\sum_r\lambda_r\|Q_r\|_2^2=N+bH-1.
+\tag{10}
+\]
+
+Combining (7), (9), and (10),
+
+\[
+k^2\le(N+bH-1)\left(1+\frac{a(k-1)}H\right).
+\tag{11}
+\]
+
+The elementary difference count gives `k=O(sqrt N)`. Choose `H`, constrained
+to be a multiple of `m`, so that
+
+\[
+H=\sqrt{a/b}\,N^{3/4}+O(1).
+\]
+
+Expanding (11), first with `k=O(sqrt N)` and then substituting the resulting
+`k=sqrt N+O(N^{1/4})`, yields
+
+\[
+k^2\le N+2\sqrt{ab}\,N^{3/4}+O(N^{1/2}).
+\]
+
+Taking square roots proves (6). `QED`
+
+## 3. Exact causal one-sided covering lemma
+
+Kernel symmetry in Lemma 2.1 is used only to copy one boundary certificate to
+the other end. A causal kernel needs only one modified boundary.
+
+Let `K_r` be nonnegative probability sequences supported on
+`{0,...,H-1}`. Let `Q_r` be real sequences on `{0,...,N+H-2}`. Suppose
+
+\[
+\sum_r\lambda_r\sum_{s=0}^{H-1}K_r(s)Q_r(x+s)\ge1
+\qquad(0\le x<N).
+\tag{12}
+\]
+
+Then the same summation and Cauchy argument gives the exact inequality
+
+\[
+k^2\le
+\left(\sum_r\lambda_r\|Q_r\|_2^2\right)
+\left(1+(k-1)\sum_r\lambda_r\sum_sK_r(s)^2\right).
+\tag{13}
+\]
+
+No condition is placed on the right edge because a causal convolution from a
+mark `x` uses only sites `x,...,x+H-1`; the baseline support extension by `H`
+accounts for that edge.
+
+## 4. Continuum-to-discrete corollary
+
+Normalize continuum kernels to a common support `[0,H_0]`. Suppose
+`p_r>=0`, `int p_r=1`, and `w_r-1` is integrable and square-integrable, with
+
+\[
+\sum_r\lambda_r\int_0^{H_0}p_r(u)w_r(x+u)\,du\ge1
+\quad(x\ge0).
+\tag{14}
+\]
+
+Set
+
+\[
+A=\sum_r\lambda_r\int_0^{H_0}p_r(u)^2\,du,
+\quad
+B=H_0+\sum_r\lambda_r\int_0^\infty(w_r(t)^2-1)\,dt.
+\tag{15}
+\]
+
+Assume the profiles are piecewise `C^1` with finitely many jumps and decay
+exponentially to one. Midpoint discretization at physical scale `h` gives
+causal kernels and boundary weights satisfying
+
+\[
+\sum_r\lambda_r\sum_sK_{r,h}(s)^2
+ =\frac Ah+O(h^{-2}),
+\tag{16}
+\]
+
+and
+
+\[
+\sum_r\lambda_r\|Q_{r,h}\|_2^2
+ =N+Bh+o(h)+O(N/h).
+\tag{17}
+\]
+
+A common upward correction `O(1/h)` makes every discrete covering inequality
+exact. Its norm cost is `O(N/h)`. Taking `h asymp N^{3/4}` makes both errors
+`o(N^{3/4})`. Equation (13) therefore gives
+
+\[
+F(N)\le\sqrt N+\sqrt{AB}\,N^{1/4}+o(N^{1/4}).
+\tag{18}
+\]
+
+The proof of the continuum barrier establishes `AB>=8/9` for every such
+one-sided system and exhibits equality.
+
+
+================================================================================
+FILE: requirements.txt
+================================================================================
+sympy>=1.12
+
+
+================================================================================
+FILE: research/dead_ends.md
+================================================================================
+# Research log: closed routes and named obstructions
+
+Every item below records what was tried, what exact statement survived, and why
+the route stopped. None is counted as a bound unless a proof or exact
+certificate is present elsewhere in the repository.
+
+## 1. More pairwise kernels
+
+**Attempt.** Add kernels, refine grids, allow one-sided nonsymmetric profiles,
+and optimize boundary weights.
+
+**Closure.** `proofs/continuum_barrier.md` proves the exact optimum
+`2 sqrt(2)/3` over the one-sided vector kernel-majorant class.
+
+**Obstruction.** **Pairwise-autocorrelation barrier.** The relaxation knows
+which lags are occupied but not whether all occupied lags arise from one common
+vertex potential.
+
+## 2. Rank sums, concavity, and aggregate floors
+
+**Attempt.** Add the rank variables `d_{i,l}`, exact completion identities,
+rank-sum symmetry, concavity, and all band-floor inequalities, but without
+one-hot lag incidence.
+
+**Closure.** Central-gap pseudo-configurations pass every such constraint at
+all deficit coefficients below two.
+
+**Obstruction.** **Uncoupled rank plateau.** Completion identities without the
+lag-to-interval incidence map do not encode difference exclusivity.
+
+## 3. Raw translate factorial moments
+
+**Attempt.** Use all inequalities
+
+`sum_s binom(X_s,r) <= binom(H,r)`
+
+for intersections of an interval with translates of a planar difference set.
+
+**Closure.** The first two moments are sharp; for `r>=3` the raw upper bound is
+larger than Poisson scale by `k^{r-2}`. A two-level pseudodistribution passes
+all these bounds while retaining zero-window mass of order `1/mu`.
+
+**Obstruction.** **Translate-clustering obstruction.** The hierarchy permits
+rare dense intersections because it does not control centered moments.
+
+## 4. Sliding-window Lipschitz and total variation
+
+**Attempt.** Add
+
+`X_{s+1}-X_s in {-1,0,1}`
+
+and `sum |X_{s+1}-X_s| <= 2k`.
+
+**Outcome.** These constraints force ramps between zero and the typical height
+`mu`, but a ramp has length only `O(mu)`, negligible next to a critical zero
+run of length `M/mu`. They do not change the `k^{3/2}` exponent.
+
+**Obstruction.** **Transition-ramp plateau.** Pointwise regularity of window
+counts is too local.
+
+## 5. Initial-difference additive patterns
+
+**Attempt.** If `[1,g]` is almost contained in the difference set, count Schur
+and higher additive patterns in that interval.
+
+**Outcome.** An equality `x+y=z` among represented differences need not come
+from a composable path of three marks. It may be a nonlocal equality of two-
+and three-sums. Sidon uniqueness controls two-sums, not arbitrary higher-sum
+representations.
+
+**Obstruction.** **Noncomposable additive-pattern obstruction.** Dense label
+patterns do not automatically become gradient paths.
+
+## 6. Higher additive energy of the difference set
+
+**Attempt.** Bound long additive configurations in the represented difference
+set through higher energies of `A` or `A-A`.
+
+**Outcome.** Non-chain configurations introduce up to twice as many vertex
+variables as path configurations; known or elementary energy bounds are too
+large to improve the critical exponent.
+
+**Obstruction.** **Vertex-pattern explosion.** Higher lag equations do not
+retain shared endpoints.
+
+## 7. Quotient/residue carry compression
+
+**Attempt.** Divide marks into blocks of size about `k`, and use complementarity
+between carry and non-carry representations of every small difference.
+
+**Outcome.** Inversion-count identities reach the square-root critical scale.
+The exact residue values and shared endpoints remain unused.
+
+**Obstruction.** **Carry-count plateau.** Counts of carries are not the same as
+residue-level incidence realizability.
+
+## 8. Undercompressed algebraic graphs
+
+**Attempt.** Flatten planar-function, Costas, Galois-ring, and length-two local
+ring graphs with base `q-lambda sqrt(q)`, then delete a small exceptional set.
+
+**Outcome.** In finite experiments, adjacent carry-level collision hypergraphs
+required deletion of a positive fraction of vertices, not `O(sqrt(q))`.
+
+**Obstruction.** **Carry-collision density.** The algebraic seed controls equal
+vector differences but not neighboring integer carry levels.
+
+No asymptotic nonexistence theorem is claimed from these experiments.
+
+## 9. Spectral-selector factorization
+
+**Attempt.** Keep the exact polynomial spectral factor
+
+`P P#-(k-1)z^D = S_M(1+(z-1)E)`.
+
+**Closure.** `E` is an exactly balanced complement-palindromic binary word of
+length `M-2g+1`.
+
+**Obstruction.** **Selector-factor plateau.** Divisibility and palindromy alone
+allow exponentially many selectors for every `g`. The missing condition is
+existence of a binary gradient spectral factor `P`.
+
+## 10. Vandermonde and capacity
+
+**Attempt.** Use the exact identity
+
+`prod_{i<j}|zeta^{a_j}-zeta^{a_i}|^2=M`
+
+for a perfect difference set, together with confinement to a long circular
+arc.
+
+**Outcome.** The determinant is already exponentially below the Fekete maximum
+for `k` points on the full circle, so an upper capacity bound has the wrong
+direction and does not constrain the missing arc.
+
+**Obstruction.** **Vandermonde-scale mismatch.** Arc capacity controls the
+maximum product, while the exact design product is very small.
+
+## 11. Rankwise AM--GM over cyclic interval sums
+
+**Attempt.** Multiply all rank sums in a perfect cyclic ruler and compare with
+`(M-1)!`.
+
+**Outcome.** The total Jensen slack is of order `k log k`; a large gap costs
+quadratically across ranks and gives at best a `k^{3/2} sqrt(log k)` scale.
+
+**Obstruction.** **Rankwise Jensen barrier.** Rank means discard the incidence
+placement that must supply the improvement.
+
+## 12. Generic combinatorial large sieve
+
+**Attempt.** Apply recent bounded-multiplicity large-sieve mechanisms.
+
+**Outcome.** Their strongest gains use branching from nonlinear algebraic
+relations. The linear form `x-y` has no analogous branching once pairwise
+uniqueness is imposed.
+
+**Obstruction.** **Linear-form no-branching barrier.** A new source of
+incidence growth is required.
+
+## 13. Multiplier/cyclic-code structure
+
+**Attempt.** Reduce a planar cyclic difference set modulo a prime divisor of
+its order parameter, use numerical multipliers, cyclic-code roots, and BCH
+bounds.
+
+**Outcome.** The group-ring equation supplies many spectral zeros over finite
+fields, but a long run of zero *time coefficients* is not a run of consecutive
+spectral zeros. Linear-complexity and BCH estimates give only order-`M`
+constraints.
+
+**Obstruction.** **Time/spectrum run mismatch.** Multiplier closure does not
+convert the desired additive interval gap into a sufficiently long defining
+set of a cyclic code.
+
+
+================================================================================
+FILE: research/next_target.md
+================================================================================
+# The next admissible target
+
+The pairwise barrier and every uncoupled aggregate plateau are closed. The next
+step must use a property that all the exact pseudomodels violate.
+
+## 1. Smallest missing property
+
+An actual ruler supplies one common ordered vertex set and therefore one common
+potential `a_i`. Every lag indicator and every completion identity is generated
+by that same potential:
+
+\[
+X_{i,\ell,t}=1_{\{a_{i+\ell}-a_i=t\}}.
+\]
+
+The smallest missing property is not merely the cocycle equation and not merely
+lag exclusivity. It is their **incidence-coupled conjunction**:
+
+- each interval occupies exactly one lag;
+- each lag is occupied by at most one interval;
+- adjacent intervals compose to the containing interval;
+- all these statements use the same one-hot variables.
+
+## 2. Two equivalent research interfaces
+
+### A. Moment/localizer interface
+
+Use the one-hot variables and the degree-two localizers in
+`proofs/incidence_hierarchy.md`. Search for a dual inequality that controls the
+cyclic defect `g=M-D`. Any finite computation must end in a rational primal or
+dual certificate.
+
+### B. Translate-window interface
+
+For a planar difference set, prove centered moment bounds
+
+\[
+M^{-1}\sum_s|X_s-\mu|^{2r}\le C_r\mu^r
+\]
+
+at orders tending to infinity. For an almost-perfect completion, add a defect
+term controlled by holes and duplicate shifted pair sums. The exact gateway
+theorem then gives `g=k^{1+o(1)}`.
+
+These interfaces encode the same missing information at different resolutions:
+common endpoint compatibility of many pair incidences.
+
+## 3. Concrete termination criteria
+
+A successful hierarchy must produce one of the following exact outcomes.
+
+1. **Drop.** A rational/algebraic dual certificate gives a smaller asymptotic
+   deficit. Record the new bound and open the next level only after exact
+   verification.
+2. **Plateau.** An explicit feasible pseudomodel and a matching exact dual prove
+   that the level is insufficient. Name the missing property.
+3. **Vanishing hierarchy.** Prove that the exact optima tend to zero. This gives
+   `F(N)=sqrt(N)+o(N^{1/4})`.
+4. **Subpolynomial stability.** Prove `M-D<=k^{1+o(1)}` through the full
+   incidence hierarchy or the translate-moment gateway. This gives the upper
+   assertion `F(N)<=sqrt(N)+N^{o(1)}`.
+
+## 4. What is not an admissible result
+
+- a floating-point optimum without a rationalized certificate;
+- a finite-size trend extrapolated to an asymptotic theorem;
+- another kernel within the closed pairwise class;
+- a rank or moment inequality that can be passed by the explicit plateau
+  pseudomodels;
+- a statement of the desired stability estimate as an unproved lemma.
+
+
+================================================================================
+FILE: run_all.py
+================================================================================
+#!/usr/bin/env python3
+"""Run the repository's exact reproduction suite."""
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parent
+
+CORE = [
+    "certificates/m80/verify_fraction.py",
+    "checkers/check_cyclic_defect.py",
+    "checkers/check_carry_partition.py",
+    "checkers/check_translate_incidence.py",
+    "checkers/check_factorial_moment_plateau.py",
+]
+
+SYMPY = [
+    "certificates/m80/verify_sympy.py",
+    "checkers/check_delay_profile_symbolic.py",
+    "checkers/check_C_derivation_symbolic.py",
+    "checkers/check_decomposition19_symbolic.py",
+    "checkers/check_pairwise_pseudo.py",
+    "checkers/check_rank_aggregate_plateau.py",
+    "checkers/check_spectral_selector.py",
+]
+
+
+def run(relative: str) -> None:
+    path = ROOT / relative
+    if not path.is_file():
+        raise SystemExit(f"missing artifact: {relative}")
+    print(f"\n=== {relative} ===", flush=True)
+    subprocess.run([sys.executable, str(path)], cwd=ROOT, check=True)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--core", action="store_true", help="standard-library checks")
+    group.add_argument("--all", action="store_true", help="core plus SymPy checks")
+    args = parser.parse_args()
+
+    for item in CORE:
+        run(item)
+    if args.all:
+        try:
+            import sympy  # noqa: F401
+        except ImportError as exc:
+            raise SystemExit("SymPy is required for --all; install requirements.txt") from exc
+        for item in SYMPY:
+            run(item)
+
+    print("\nPASS: requested reproduction suite completed.")
+
+
+if __name__ == "__main__":
+    main()
+
