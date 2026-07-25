@@ -1,115 +1,97 @@
-# Sidon exact-research package
+# One-Sided Smoothing for Finite Sidon Sets
 
-This repository is a hostile-referee audit and exact-reproduction package for
-work on the maximal size
+Artifact repository accompanying the paper:
 
-\[
-F(N)=\max\{|A|:A\subseteq\{0,\dots,N-1\}\text{ is Sidon}\}.
-\]
+> **Sarim Sarfraz**, *One-sided smoothing for finite Sidon sets: the coefficient 2√2/3 and its optimality*, 2026. arXiv link to be added upon announcement.
 
-## Status first
+Let F(N) denote the largest cardinality of a Sidon subset of {0, 1, …, N−1}.
+The paper proves:
 
-This repository **does not claim** a proof of
+1. **Record coefficient.** F(N) ≤ √N + (2√2/3) N^{1/4} + o(N^{1/4}), with
+   2√2/3 = 0.9428090415…, improving the previously published coefficient
+   0.9435 (Hou–Zhao, arXiv:2607.01169) and all previously announced values.
+2. **Finite certificate.** F(N) ≤ √N + 0.942881 N^{1/4} + O(1), established by
+   an exact rational certificate verified in integer/rational arithmetic only.
+3. **Optimality (barrier theorem).** Over the entire class of finite
+   vector-valued one-sided kernel–majorant systems — whose only Sidon input is
+   the pairwise injectivity of differences — the infimum of the achievable
+   coefficient is exactly 2√2/3, attained by the linear ramp kernel p(u) = 2u
+   and the delay-equation boundary profile.
+4. **Aggregate plateau.** The rank-sum, concavity, band-floor, and uncoupled
+   completion layer provably does not improve the barrier.
 
-\[
-F(N)=\sqrt N+N^{o(1)}
-\]
+This repository contains every certificate, symbolic checker, and proof note
+supporting these results, together with the exploratory material and recorded
+dead ends of the surrounding research program.
 
-or of \(F(N)=\sqrt N+o(N^{1/4})\). Those assertions remain the research target.
-The package separates proved statements, exact finite certificates, symbolic
-identity checks, and conjectural/conditional routes. `CLAIMS.md` is the claim
-ledger.
+## Scope of claims
 
-The strongest fully finite artifact in this package is the exact `m=80`
-vector-smoothing certificate proving, conditional only on the written covering
-lemma,
+This repository does **not** claim a proof of F(N) = √N + N^{o(1)}
+(Erdős Problem 30) or of F(N) = √N + o(N^{1/4}); those remain open.
+`CLAIMS.md` is the authoritative claim ledger, separating (i) theorems proved
+in the paper, (ii) exact machine-verified certificates and algebraic
+identities, (iii) analytic arguments verified by hand and written in the proof
+notes, and (iv) conditional or exploratory statements. Symbolic scripts
+certify algebraic identities only; functional-analytic steps (measure-theoretic
+justifications, contour shifting) are proved in the notes and are not
+represented as computer proofs.
 
-\[
-F(N)\le \sqrt N+0.942881N^{1/4}+O(1).
-\]
+## Reproduction
 
-The package also contains a self-contained analytic proof of the continuum
-one-sided kernel-majorant barrier
+Requires Python 3 (standard library suffices for the certificate; SymPy for
+the symbolic checkers):
 
-\[
-\inf\sqrt{AB}=\frac{2\sqrt2}{3},
-\]
-
-including the delay profile, dual renewal kernel, and square-and-potential
-decomposition. The symbolic scripts check the algebraic identities; the
-functional-analytic justifications are written out in the proof notes and are
-not misrepresented as computer proofs.
-
-Finally, the repository records an exact incidence hierarchy for cyclic planar
-difference sets and a conditional high-moment gateway. It also names the
-obstructions that caused each explored route to stop.
-
-## Reproduce everything
-
-Standard-library checks:
-
-```bash
-python3 run_all.py --core
 ```
-
-All checks, including independent SymPy verification:
-
-```bash
 python3 -m pip install sympy
 python3 run_all.py --all
 ```
 
-Or with `make`:
+Expected output: every checker reports PASS. The certificate alone can be
+verified with no third-party dependencies:
 
-```bash
-make core
-make all
+```
+python3 certificates/m80/verify_fraction.py
 ```
 
-Every command exits nonzero on failure. The exact certificate verifiers use
-explicit exceptions rather than Python `assert`, so optimization mode cannot
-silence the checks.
+An independent SymPy-based verifier (`certificates/m80/verify_sympy.py`)
+performs the same acceptance test with separately written code. Acceptance is
+the exact rational comparison a·b < (942881/10^6)²; no floating-point quantity
+enters any proof.
 
-## One-command reproduction by artifact
+## Repository layout
 
-| Artifact | Command |
+| Path | Contents |
 |---|---|
-| m=80 certificate, standard library | `python3 certificates/m80/verify_fraction.py` |
-| m=80 certificate, independent SymPy | `python3 certificates/m80/verify_sympy.py` |
-| Delay-profile algebra | `python3 checkers/check_delay_profile_symbolic.py` |
-| Correlation `C(r)` derivation | `python3 checkers/check_C_derivation_symbolic.py` |
-| Decomposition (19) algebra | `python3 checkers/check_decomposition19_symbolic.py` |
-| Pairwise pseudo-configuration | `python3 checkers/check_pairwise_pseudo.py` |
-| Rank-aggregate plateau formulas | `python3 checkers/check_rank_aggregate_plateau.py` |
-| Cyclic incidence moments and gap examples | `python3 checkers/check_translate_incidence.py` |
-| Cyclic defect identities | `python3 checkers/check_cyclic_defect.py` |
-| Carry/block partition identities | `python3 checkers/check_carry_partition.py` |
+| `certificates/m80/` | Exact m = 80 certificate (`certificate.json`: 8 kernels × 80 bins, boundary vectors, weights, all integers) and two independent exact verifiers |
+| `proofs/` | Proof notes: continuum barrier, delay profile, square-and-potential decomposition, vector-valued covering lemma, aggregate plateau, spectral-selector factorization, cyclic-defect reduction, incidence hierarchy |
+| `checkers/` | Exact symbolic checkers for the C(r) derivation, decomposition identity, delay-profile integrals, plateau algebra, pseudo-configurations, and selector factorization |
+| `research/` | Research notes: named obstructions, dead-end reports, next targets |
+| `FULL_PROOF_NOTE.md` | Consolidated proof and audit note |
+| `CLAIMS.md` | Claim ledger |
+| `REPRODUCTION_LOG.txt` | Log of a complete verification run |
+| `MANIFEST.md` | SHA-256 manifest of all artifacts |
 
-## Directory map
+## Context
 
-- `ALL_CONTENTS.txt`: every text/source artifact concatenated into one directly readable file.
-- `CLAIMS.md`: exact status of every mathematical claim.
-- `proofs/vector_covering_lemma.md`: discrete one-sided and symmetric
-  vector-valued covering lemmas.
-- `proofs/continuum_barrier.md`: the continuum dual certificate and barrier.
-- `proofs/delay_profile.md`: delay equation, transform, decay, and exact
-  integrals.
-- `proofs/decomposition19.md`: full square-and-potential calculation.
-- `proofs/incidence_hierarchy.md`: translate-incidence moments, the
-  high-moment gateway, and the exact point at which the argument remains open.
-- `proofs/cyclic_defect_reduction.md`: almost-perfect cyclic completion of an
-  interval ruler.
-- `proofs/rank_aggregate_plateau.md`: why uncoupled rank information does not
-  improve the pairwise barrier.
-- `research/dead_ends.md`: every attempted route and its named obstruction.
-- `research/next_target.md`: the smallest currently admissible strengthening.
-- `certificates/m80/`: complete integer data and two exact verifiers.
+The coefficient of N^{1/4} in the Erdős–Turán upper bound has the history
+1 (Lindström 1969) → 0.998 (Balogh–Füredi–Roy 2023) → 0.99703 (O'Bryant 2024)
+→ 0.98183 (Carter–Hunter–O'Bryant 2025) → 0.97633 (announced,
+Carter–Georgiev–Gómez-Serrano–Hunter–O'Bryant–Tao–Wagner) → 0.9435
+(Hou–Zhao 2026). The barrier theorem identifies 2√2/3 as the exact limit of
+the underlying method; the paper isolates the incidence-coupled Level-2 moment
+cone as the unique admissible source of further improvement. See
+`REFERENCES.md` for full citations and the Erdős Problems entry for
+Problem 30.
 
-## Conventions
+## Disclosure
 
-A Sidon set here means that every nonzero ordered difference has at most one
-representation. This is equivalent to uniqueness of unordered pair sums when
-diagonal pairs are included.
+Portions of this work were carried out with the assistance of large language
+model systems. All mathematical statements and proofs were verified by the
+author, who takes sole responsibility for their correctness; the verification
+suite above is provided so that no claim need be taken on trust.
 
-No decimal is used as evidence. Decimals printed by verifiers are display-only;
-all acceptance decisions use integers or exact rationals.
+## License and citation
+
+See `LICENSE`. If you use the certificate or checkers, please cite the paper
+above; a Zenodo DOI for this repository will be minted at public release
+(tag `v1.0` corresponds to arXiv v1).
