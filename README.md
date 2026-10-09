@@ -24,6 +24,18 @@ This repository contains every certificate, symbolic checker, and proof note
 supporting these results, together with the exploratory material and recorded
 dead ends of the surrounding research program.
 
+## Dates and later work
+
+This repository was created privately on 25 July 2026 and made public on
+9 October 2026. Apart from this section, its contents are unchanged since
+25 July 2026 (commit `97fc7ba` and the GitHub-signed commit `e6eb784`), so
+"previously announced values" above refers to the literature as of that date.
+Since then, Haoyu Chen has independently obtained and publicly announced the
+coefficient 2√2/3, with explicit additive constant 1 for N ≥ 120⁴
+(Zenodo, 2 October 2026, doi:10.5281/zenodo.23103979). John Akwei has
+announced a finite certificate and a barrier for symmetric and two-sided
+certificates (github.com/johnakwei/Science, 1–5 October 2026).
+
 ## Scope of claims
 
 This repository does **not** claim a proof of F(N) = √N + N^{o(1)}
